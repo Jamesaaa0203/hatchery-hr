@@ -14,6 +14,7 @@
 </head>
 <body class="bg-slate-50 text-slate-900 font-sans min-h-screen dark:bg-[#0b1329] dark:text-white">
 
+    <!-- HEADER SYSTEM -->
     <header class="sticky top-0 z-40 border-b bg-white border-slate-200 dark:bg-[#0b1329] dark:border-[#1c2541] px-4 py-3 flex justify-between items-center shadow-sm">
         <div class="flex items-center gap-2">
             <i data-lucide="waves" class="text-blue-600 dark:text-[#5bc0be] w-6 h-6"></i>
@@ -28,6 +29,7 @@
         </div>
     </header>
 
+    <!-- NAVIGATION TABS -->
     <nav class="flex sticky top-[53px] z-30 bg-white dark:bg-[#0b1329] border-b border-slate-200 dark:border-[#1c2541] text-xs font-black uppercase tracking-wider overflow-x-auto">
         <button onclick="switchTab('ot-tab')" id="ot-tab-btn" class="flex-1 min-w-[90px] py-3 text-center border-b-2 border-blue-600 text-blue-600 dark:text-[#5bc0be] dark:border-[#5bc0be]">
             Log OT / Spawning
@@ -43,21 +45,34 @@
         </button>
     </nav>
 
+    <!-- MAIN INTERFACE CONTAINER -->
     <main class="p-4 max-w-xl mx-auto pb-24">
 
+        <!-- MODULE 1: OVERTIME & SPAWNING LOGGING -->
         <div id="ot-tab" class="tab-content active space-y-4">
             <div class="bg-white dark:bg-[#1c2541] p-4 rounded-xl border-2 border-slate-200 dark:border-[#3a506b] shadow-sm">
                 <h2 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-3">Work Log Submission</h2>
                 <form id="otForm" class="space-y-4">
                     <div>
-                        <label class="block text-[10px] font-black uppercase tracking-wider mb-1 text-slate-500">Worker / Operator Name</label>
-                        <input type="text" id="ot_name" required placeholder="Enter full name" class="w-full p-3 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 dark:text-white focus:ring-2 focus:ring-blue-500 dark:focus:ring-[#5bc0be] outline-none font-medium">
+                        <label class="block text-[10px] font-black uppercase tracking-wider mb-1 text-slate-500">Select Worker / Operator Name</label>
+                        <select id="ot_name" required class="w-full p-3 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 dark:text-white font-bold outline-none">
+                            <option value="" disabled selected>Choose Operator</option>
+                            <option value="James">James</option>
+                            <option value="Sham">Sham</option>
+                            <option value="Saali">Saali</option>
+                            <option value="John">John</option>
+                            <option value="Ridzwan">Ridzwan</option>
+                            <option value="Hasad">Hasad</option>
+                            <option value="Suhaire">Suhaire</option>
+                            <option value="Muhammad">Muhammad</option>
+                            <option value="Sabri">Sabri</option>
+                        </select>
                     </div>
 
                     <div class="grid grid-cols-2 gap-3">
                         <div>
                             <label class="block text-[10px] font-black uppercase tracking-wider mb-1 text-slate-500">Day Designation</label>
-                            <select id="ot_day_type" class="w-full p-3 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none font-semibold">
+                            <select id="ot_day_type" class="w-full p-3 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 dark:text-white font-semibold outline-none">
                                 <option value="Normal">Normal Working Day</option>
                                 <option value="Rest Day">Rest Day / Off Day</option>
                                 <option value="Public Holiday">Public Holiday</option>
@@ -65,13 +80,14 @@
                         </div>
                         <div>
                             <label class="block text-[10px] font-black uppercase tracking-wider mb-1 text-slate-500">Shift Window</label>
-                            <select id="ot_shift_type" onchange="toggleOTFields()" class="w-full p-3 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none font-semibold">
+                            <select id="ot_shift_type" onchange="toggleOTFields()" class="w-full p-3 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 dark:text-white font-semibold outline-none">
                                 <option value="Same Day">Standard Same Day</option>
                                 <option value="Overnight">Overnight / Night Spawning</option>
                             </select>
                         </div>
                     </div>
 
+                    <!-- Dynamic Time Window Toggles -->
                     <div id="wrapper_same_day" class="p-3 rounded-lg bg-slate-100 dark:bg-[#0b1329] border border-slate-200 dark:border-slate-700 grid grid-cols-2 gap-3">
                         <div>
                             <label class="block text-xs font-bold mb-1 text-slate-600 dark:text-slate-300">Work Date</label>
@@ -94,6 +110,7 @@
                         </div>
                     </div>
 
+                    <!-- REWARD SYSTEM MATRIX SELECTION -->
                     <div class="p-4 rounded-xl border-2 border-dashed border-blue-400 dark:border-[#3a506b] bg-blue-50/50 dark:bg-[#1c2541]/50">
                         <label class="block text-[10px] font-black uppercase tracking-widest text-blue-600 dark:text-[#5bc0be] mb-2">Compensation Method</label>
                         <div class="grid grid-cols-2 gap-3">
@@ -101,14 +118,14 @@
                                 <input type="radio" name="ot_comp_rule" value="Standard Pay" checked class="w-4 h-4 accent-blue-500">
                                 <div class="text-left">
                                     <p class="text-xs font-black uppercase">Standard OT Pay</p>
-                                    <p class="text-[9px] text-slate-400 font-medium">Added directly to payroll</p>
+                                    <p class="text-[9px] text-slate-400 font-medium">Added to monetary payroll</p>
                                 </div>
                             </label>
                             <label class="flex items-center gap-2 p-2 rounded bg-white dark:bg-slate-800 border cursor-pointer shadow-sm">
                                 <input type="radio" name="ot_comp_rule" value="Extra Holiday" class="w-4 h-4 accent-emerald-500">
                                 <div class="text-left">
                                     <p class="text-xs font-black uppercase text-emerald-600 dark:text-emerald-400">Extra Holiday</p>
-                                    <p class="text-[9px] text-slate-400 font-medium">Increases leave balance</p>
+                                    <p class="text-[9px] text-slate-400 font-medium">Spawning forced 1.0 Day</p>
                                 </div>
                             </label>
                         </div>
@@ -121,13 +138,25 @@
             </div>
         </div>
 
+        <!-- MODULE 2: LEAVE APPLICATION -->
         <div id="leave-tab" class="tab-content space-y-4">
             <div class="bg-white dark:bg-[#1c2541] p-4 rounded-xl border-2 border-slate-200 dark:border-[#3a506b] shadow-sm">
                 <h2 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-3">Leave Application Entry</h2>
                 <form id="leaveForm" class="space-y-4">
                     <div>
-                        <label class="block text-[10px] font-black uppercase tracking-wider mb-1 text-slate-500">Worker / Operator Name</label>
-                        <input type="text" id="leave_name" required placeholder="Enter full name" class="w-full p-3 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none font-medium">
+                        <label class="block text-[10px] font-black uppercase tracking-wider mb-1 text-slate-500">Select Worker / Operator Name</label>
+                        <select id="leave_name" required class="w-full p-3 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 dark:text-white font-bold outline-none">
+                            <option value="" disabled selected>Choose Operator</option>
+                            <option value="James">James</option>
+                            <option value="Sham">Sham</option>
+                            <option value="Saali">Saali</option>
+                            <option value="John">John</option>
+                            <option value="Ridzwan">Ridzwan</option>
+                            <option value="Hasad">Hasad</option>
+                            <option value="Suhaire">Suhaire</option>
+                            <option value="Muhammad">Muhammad</option>
+                            <option value="Sabri">Sabri</option>
+                        </select>
                     </div>
 
                     <div class="grid grid-cols-2 gap-3">
@@ -135,7 +164,7 @@
                             <label class="block text-[10px] font-black uppercase tracking-wider mb-1 text-slate-500">Leave Type</label>
                             <select id="leave_type" class="w-full p-3 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none font-bold">
                                 <option value="Annual Leave">Annual Leave</option>
-                                <option value="Extra Holiday Used">Extra Holiday (Comp Time)</option>
+                                <option value="Extra Holiday Used">Extra Holiday Deduction</option>
                                 <option value="Medical Leave">Medical Leave</option>
                                 <option value="Emergency Leave">Emergency Leave</option>
                                 <option value="Unpaid Leave">Unpaid Leave</option>
@@ -154,7 +183,7 @@
 
                     <div>
                         <label class="block text-[10px] font-black uppercase tracking-wider mb-1 text-slate-500">Operational Reason / Memo</label>
-                        <textarea id="leave_reason" rows="3" required placeholder="Provide concise context details..." class="w-full p-3 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none font-medium text-sm"></textarea>
+                        <textarea id="leave_reason" rows="3" required placeholder="Provide clear reason details..." class="w-full p-3 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none font-medium text-sm"></textarea>
                     </div>
 
                     <button type="button" onclick="submitForm('Leave')" class="w-full py-3.5 bg-blue-600 dark:bg-[#5bc0be] text-white dark:text-slate-900 font-black text-sm uppercase tracking-wider rounded-lg shadow hover:opacity-90 active:scale-98 transition flex justify-center items-center gap-2">
@@ -164,16 +193,27 @@
             </div>
         </div>
 
+        <!-- MODULE 3: LIVE RE-BALANCING METRIC DISPLAY LOOKUP -->
         <div id="balance-tab" class="tab-content space-y-4">
             <div class="bg-white dark:bg-[#1c2541] p-4 rounded-xl border-2 border-slate-200 dark:border-[#3a506b] shadow-sm">
                 <h2 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-1">Worker Ledger Lookup</h2>
-                <p class="text-xs text-slate-500 mb-4">Select or type your name to verify available remaining balances.</p>
+                <p class="text-xs text-slate-500 mb-4">Select your name from the dashboard terminal layout below to load your balances.</p>
                 
                 <div class="space-y-4">
                     <div>
-                        <label class="block text-[10px] font-black uppercase tracking-wider mb-1 text-slate-500">Select Worker Name</label>
-                        <input type="text" id="balance_worker_search" oninput="triggerBalanceLookup()" placeholder="Type name to retrieve live data..." list="worker_suggestions" class="w-full p-3 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 dark:text-white font-bold tracking-wide outline-none">
-                        <datalist id="worker_suggestions"></datalist>
+                        <label class="block text-[10px] font-black uppercase tracking-wider mb-1 text-slate-500">Select Roster Profile</label>
+                        <select id="balance_worker_search" onchange="triggerBalanceLookup()" class="w-full p-3 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 dark:text-white font-bold tracking-wide outline-none">
+                            <option value="">-- Choose Name --</option>
+                            <option value="James">James</option>
+                            <option value="Sham">Sham</option>
+                            <option value="Saali">Saali</option>
+                            <option value="John">John</option>
+                            <option value="Ridzwan">Ridzwan</option>
+                            <option value="Hasad">Hasad</option>
+                            <option value="Suhaire">Suhaire</option>
+                            <option value="Muhammad">Muhammad</option>
+                            <option value="Sabri">Sabri</option>
+                        </select>
                     </div>
 
                     <div id="balance_display_container" class="grid grid-cols-3 gap-2 pt-2">
@@ -185,18 +225,19 @@
                         <div class="bg-emerald-50/50 dark:bg-emerald-950/20 p-3 rounded-xl border border-emerald-200 dark:border-emerald-900/50 text-center">
                             <p class="text-[9px] font-black uppercase text-emerald-600 dark:text-emerald-400 tracking-wider">Extra Holidays</p>
                             <p id="lbl_extra_bal" class="text-lg font-black text-emerald-600 dark:text-emerald-400">0.0</p>
-                            <span class="text-[9px] text-slate-400 block font-medium">Earned Days</span>
+                            <span class="text-[9px] text-slate-400 block font-medium">Earned Balance</span>
                         </div>
                         <div class="bg-slate-100 dark:bg-[#0b1329] p-3 rounded-xl border dark:border-slate-800 text-center">
-                            <p class="text-[9px] font-black uppercase text-slate-400 tracking-wider">Medical Leave</p>
+                            <p class="text-[9px] font-black uppercase text-slate-400 tracking-wider">Medical allowance</p>
                             <p id="lbl_medical_bal" class="text-lg font-black text-slate-700 dark:text-slate-200">0.0</p>
-                            <span class="text-[9px] text-slate-400 block font-medium">Days Left</span>
+                            <span class="text-[9px] text-slate-400 block font-medium">Days Used</span>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
+        <!-- MODULE 4: MANAGER EXECUTIVE CONTROL TERMINAL -->
         <div id="mgr-tab" class="tab-content space-y-4">
             <div id="gatekeeper_panel" class="text-center p-8 bg-white dark:bg-[#1c2541] border-2 border-slate-200 dark:border-[#3a506b] rounded-xl max-w-sm mx-auto space-y-4 shadow-sm">
                 <i data-lucide="lock" class="w-8 h-8 text-amber-500 mx-auto animate-pulse"></i>
@@ -219,6 +260,7 @@
                     </button>
                 </div>
 
+                <!-- BALANCES MONITOR SHEET OVERVIEW TAB TABLE -->
                 <div class="space-y-2">
                     <h3 class="text-xs font-black uppercase tracking-wider text-blue-500">Active Leave Registry Balances</h3>
                     <div class="overflow-x-auto rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#1c2541] shadow-sm">
@@ -228,7 +270,7 @@
                                     <th class="p-3">Operator Name</th>
                                     <th class="p-3">Annual (Left)</th>
                                     <th class="p-3">Extra Holiday</th>
-                                    <th class="p-3">Medical (Left)</th>
+                                    <th class="p-3">Medical Used</th>
                                 </tr>
                             </thead>
                             <tbody id="table_balance_body" class="divide-y divide-slate-100 dark:divide-slate-800 font-medium dark:text-slate-300">
@@ -238,6 +280,7 @@
                     </div>
                 </div>
 
+                <!-- OVERTIME MATRIX VIEW -->
                 <div class="space-y-2">
                     <h3 class="text-xs font-black uppercase tracking-wider text-slate-400">Overtime Log Transactions</h3>
                     <div class="overflow-x-auto rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#1c2541] shadow-sm">
@@ -257,6 +300,7 @@
                     </div>
                 </div>
 
+                <!-- LEAVE TRANSACTION VIEW -->
                 <div class="space-y-2">
                     <h3 class="text-xs font-black uppercase tracking-wider text-slate-400">Absence & Leave Application Log</h3>
                     <div class="overflow-x-auto rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#1c2541] shadow-sm">
@@ -279,20 +323,17 @@
         </div>
     </main>
 
+    <!-- SCRIPT SYSTEM CONTROLS -->
     <script>
-        // REPLACE THIS URL WITH YOUR NEW GOOGLE APPS SCRIPT DEPLOYMENT WEBAPP URL
-        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzGunqr_-X6YExc7P-M8HBWLBQD9oJe2jLqu4thp1-Hw4wv2X6ZGU9NZTWzt3BA8AILTQ/exec"; 
-        const CACHE_KEY = "hatchery_hr_v3_cache";
+        const WEB_APP_URL = "SET_YOUR_DEPLOYED_GOOGLE_APPS_SCRIPT_URL_HERE"; 
+        const CACHE_KEY = "hatchery_hr_v4_cache";
         const MASTER_PIN = "3653";
-        
-        // Cache mapping storage array local copy
         let liveBalancesData = [];
 
         function calculateThemeScope() {
             const currentHour = new Date().getHours();
             const badge = document.getElementById("themeBadge");
             const isNight = (currentHour >= 18 || currentHour < 6);
-            
             if (isNight) {
                 document.documentElement.classList.add('dark');
                 badge.innerText = "Night Shift Operations Mode";
@@ -307,7 +348,6 @@
         function switchTab(targetTabId) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             document.getElementById(targetTabId).classList.add('active');
-            
             const tabButtonMap = ['ot-tab', 'leave-tab', 'balance-tab', 'mgr-tab'];
             tabButtonMap.forEach(t => {
                 const button = document.getElementById(t + '-btn');
@@ -331,13 +371,12 @@
         }
 
         function unlockDashboard() {
-            const pinInputValue = document.getElementById("mgr_pin").value;
-            if (pinInputValue === MASTER_PIN) {
+            if (document.getElementById("mgr_pin").value === MASTER_PIN) {
                 document.getElementById("gatekeeper_panel").classList.add("hidden");
                 document.getElementById("dashboard_panel").classList.remove("hidden");
                 fetchSheetData();
             } else {
-                alert("Access Denied. Secret operational matrix PIN signature incorrect.");
+                alert("Access Denied. Secret pin invalid.");
             }
         }
 
@@ -362,10 +401,9 @@
         }
 
         function loadFormCache() {
-            const cachedPayloadString = localStorage.getItem(CACHE_KEY);
-            if (!cachedPayloadString) return;
-            const item = JSON.parse(cachedPayloadString);
-            
+            const cachedString = localStorage.getItem(CACHE_KEY);
+            if (!cachedString) return;
+            const item = JSON.parse(cachedString);
             document.getElementById("ot_name").value = item.otName || "";
             document.getElementById("ot_day_type").value = item.otDayType || "Normal";
             document.getElementById("ot_shift_type").value = item.otShiftType || "Same Day";
@@ -379,25 +417,17 @@
             document.getElementById("leave_days").value = item.lDays || "";
             document.getElementById("leave_reason").value = item.lReason || "";
             document.getElementById("balance_worker_search").value = item.workerSearch || "";
-            
             if (item.otComp) {
-                const radioTarget = document.querySelector(`input[name="ot_comp_rule"][value="${item.otComp}"]`);
-                if (radioTarget) radioTarget.checked = true;
+                const rBtn = document.querySelector(`input[name="ot_comp_rule"][value="${item.otComp}"]`);
+                if (rBtn) rBtn.checked = true;
             }
-            
             toggleOTFields();
         }
 
         async function submitForm(type) {
-            if (WEB_APP_URL.includes("YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE")) {
-                alert("Error Configuration Trace: Web App execution URL string parameter is unassigned.");
-                return;
-            }
-
             let payload = { formType: type };
-
             if (type === "OT") {
-                payload.employeeName = document.getElementById("ot_name").value.trim();
+                payload.employeeName = document.getElementById("ot_name").value;
                 payload.dayType = document.getElementById("ot_day_type").value;
                 payload.shiftType = document.getElementById("ot_shift_type").value;
                 payload.dateSingle = document.getElementById("ot_date_single").value;
@@ -405,16 +435,14 @@
                 payload.startTime = document.getElementById("ot_start").value;
                 payload.endTime = document.getElementById("ot_end").value;
                 payload.compensationRule = document.querySelector('input[name="ot_comp_rule"]:checked').value;
-                
-                if (!payload.employeeName) { alert("Missing parameter data: Employee signature identity text box blank."); return; }
+                if (!payload.employeeName) { alert("Please select your operator name."); return; }
             } else {
-                payload.employeeName = document.getElementById("leave_name").value.trim();
+                payload.employeeName = document.getElementById("leave_name").value;
                 payload.leaveType = document.getElementById("leave_type").value;
                 payload.startDate = document.getElementById("leave_start").value;
                 payload.durationDays = document.getElementById("leave_days").value;
                 payload.reason = document.getElementById("leave_reason").value.trim();
-                
-                if (!payload.employeeName || !payload.startDate || !payload.durationDays) { alert("Incomplete operational leave structural bounds recorded."); return; }
+                if (!payload.employeeName || !payload.startDate || !payload.durationDays) { alert("Please fill out all leave fields."); return; }
             }
 
             try {
@@ -424,14 +452,13 @@
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(payload)
                 });
-
-                alert("Operational Sheet Pipeline Sync Status: Processing Completed Successful!");
+                alert("Log submitted successfully to Spreadsheet data grid!");
                 document.getElementById(type === "OT" ? "otForm" : "leaveForm").reset();
                 saveFormCache();
                 toggleOTFields();
-                fetchSheetData(); // Refresh metrics asynchronously
+                fetchSheetData();
             } catch (err) {
-                alert("Matrix Framework Pipeline Error. Connection handshake timed out.");
+                alert("Connection pipeline timeout execution error.");
             }
         }
 
@@ -439,83 +466,52 @@
             try {
                 const response = await fetch(WEB_APP_URL);
                 const dataset = await response.json();
-                
-                // Assign to global structural data cache lookups
                 liveBalancesData = dataset.balances || [];
-                
-                // Refresh data suggestions drop box
-                const suggestionBox = document.getElementById("worker_suggestions");
-                suggestionBox.innerHTML = liveBalancesData.map(b => `<option value="${b.name}">`).join('');
 
-                // Render dynamic Balance metrics sheet overview table
-                const balBody = document.getElementById("table_balance_body");
-                balBody.innerHTML = liveBalancesData.length ? liveBalancesData.map(row => `
+                document.getElementById("table_balance_body").innerHTML = liveBalancesData.length ? liveBalancesData.map(row => `
                     <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50">
                         <td class="p-3 font-bold text-slate-800 dark:text-slate-200">${row.name}</td>
-                        <td class="p-3 font-semibold text-blue-600 dark:text-blue-400">${row.annualLeaveLeft} Days</td>
-                        <td class="p-3 font-semibold text-emerald-600 dark:text-emerald-400">${row.extraHolidayEarned} Days</td>
-                        <td class="p-3 text-slate-500">${row.medicalLeaveLeft} Days</td>
+                        <td class="p-3 font-semibold text-blue-600 dark:text-blue-400">${parseFloat(row.annualLeaveLeft).toFixed(1)} Days</td>
+                        <td class="p-3 font-semibold text-emerald-600 dark:text-emerald-400">${parseFloat(row.extraHolidayEarned).toFixed(1)} Days</td>
+                        <td class="p-3 text-slate-500">${parseFloat(row.medicalLeaveLeft).toFixed(1)} Days</td>
                     </tr>
-                `).join('') : `<tr><td colspan="4" class="p-4 text-center text-slate-400">Empty balances table frame.</td></tr>`;
+                `).join('') : `<tr><td colspan="4" class="p-4 text-center">Empty balances records.</td></tr>`;
 
-                // Render raw OT entries log view lines inside admin console
-                const otBody = document.getElementById("table_ot_body");
-                otBody.innerHTML = dataset.ot && dataset.ot.length ? dataset.ot.map(row => `
+                document.getElementById("table_ot_body").innerHTML = dataset.ot && dataset.ot.length ? dataset.ot.map(row => `
                     <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50">
                         <td class="p-3 font-semibold">${row.name || ''}</td>
                         <td class="p-3 font-black">${row.hours || '0'} h</td>
-                        <td class="p-3 uppercase text-[10px] tracking-wider text-slate-400">${row.dayType || ''}</td>
-                        <td class="p-3">
-                            <span class="px-2 py-0.5 rounded text-[10px] font-bold ${row.compRule === 'Extra Holiday' ? 'bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300' : 'bg-blue-100 dark:bg-blue-950 text-blue-800 dark:text-blue-300'}">
-                                ${row.compRule || 'Standard Pay'}
-                            </span>
-                        </td>
+                        <td class="p-3 text-[10px] tracking-wider text-slate-400 font-bold uppercase">${row.dayType || ''}</td>
+                        <td class="p-3"><span class="px-2 py-0.5 rounded text-[10px] font-bold ${row.compRule === 'Extra Holiday' ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300' : 'bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-300'}">${row.compRule || 'Standard Pay'}</span></td>
                     </tr>
-                `).join('') : `<tr><td colspan="4" class="p-4 text-center text-slate-400">Empty logs recorded.</td></tr>`;
+                `).join('') : `<tr><td colspan="4" class="p-4 text-center">No OT logs found.</td></tr>`;
 
-                // Render Leave entries logic trace data maps
-                const leaveBody = document.getElementById("table_leave_body");
-                leaveBody.innerHTML = dataset.leave && dataset.leave.length ? dataset.leave.map(row => `
+                document.getElementById("table_leave_body").innerHTML = dataset.leave && dataset.leave.length ? dataset.leave.map(row => `
                     <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50">
                         <td class="p-3 font-semibold">${row.name || ''}</td>
-                        <td class="p-3"><span class="px-2 py-0.5 rounded text-[10px] font-medium bg-amber-100 dark:bg-amber-950 text-amber-800 dark:text-amber-300">${row.type || ''}</span></td>
-                        <td class="p-3 font-bold">${row.days || ''} Day(s)</td>
+                        <td class="p-3"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300">${row.type || ''}</span></td>
+                        <td class="p-3 font-black">${row.days || ''} Day(s)</td>
                         <td class="p-3 text-slate-400 truncate max-w-[120px] text-[11px]" title="${row.reason || ''}">${row.reason || ''}</td>
                     </tr>
-                `).join('') : `<tr><td colspan="4" class="p-4 text-center text-slate-400">No leave items.</td></tr>`;
+                `).join('') : `<tr><td colspan="4" class="p-4 text-center">No absences logged.</td></tr>`;
 
-                // Execute dynamic filter match pass immediately if query input contains characters
                 triggerBalanceLookup();
-
-            } catch (err) {
-                console.error("Critical execution thread trace failed to load spreadsheet context array mapping:", err);
-            }
+            } catch (err) { console.error("Data error registry pull:", err); }
         }
 
         function triggerBalanceLookup() {
-            const queryName = document.getElementById("balance_worker_search").value.trim().toLowerCase();
-            
-            const labelAnnual = document.getElementById("lbl_annual_bal");
-            const labelExtra = document.getElementById("lbl_extra_bal");
-            const labelMedical = document.getElementById("lbl_medical_bal");
-
-            if (!queryName) {
-                labelAnnual.innerText = "0.0";
-                labelExtra.innerText = "0.0";
-                labelMedical.innerText = "0.0";
-                return;
-            }
-
-            const matchRecord = liveBalancesData.find(b => b.name.toLowerCase() === queryName);
-
-            if (matchRecord) {
-                labelAnnual.innerText = parseFloat(matchRecord.annualLeaveLeft).toFixed(1);
-                labelExtra.innerText = parseFloat(matchRecord.extraHolidayEarned).toFixed(1);
-                labelMedical.innerText = parseFloat(matchRecord.medicalLeaveLeft).toFixed(1);
+            const query = document.getElementById("balance_worker_search").value;
+            const lAnn = document.getElementById("lbl_annual_bal");
+            const lExt = document.getElementById("lbl_extra_bal");
+            const lMed = document.getElementById("lbl_medical_bal");
+            if (!query) { lAnn.innerText = "0.0"; lExt.innerText = "0.0"; lMed.innerText = "0.0"; return; }
+            const match = liveBalancesData.find(b => b.name.toLowerCase() === query.toLowerCase());
+            if (match) {
+                lAnn.innerText = parseFloat(match.annualLeaveLeft).toFixed(1);
+                lExt.innerText = parseFloat(match.extraHolidayEarned).toFixed(1);
+                lMed.innerText = parseFloat(match.medicalLeaveLeft).toFixed(1);
             } else {
-                labelAnnual.innerText = "—";
-                labelExtra.innerText = "—";
-                labelMedical.innerText = "—";
+                lAnn.innerText = "0.0"; lExt.innerText = "0.0"; lMed.innerText = "0.0";
             }
             saveFormCache();
         }
@@ -524,12 +520,9 @@
             calculateThemeScope();
             loadFormCache();
             lucide.createIcons();
-            
-            // Asynchronously pre-fetch matrix balance files on context initiation loop
             fetchSheetData();
-
-            document.querySelectorAll("input, select, textarea").forEach(element => {
-                element.addEventListener("input", saveFormCache);
+            document.querySelectorAll("input, select, textarea").forEach(el => {
+                el.addEventListener("input", saveFormCache);
             });
         });
     </script>
