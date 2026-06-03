@@ -1,379 +1,537 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Hatchery HR Suite</title>
-  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-  <script src="https://unpkg.com/lucide@latest"></script>
-  <style>
-    body { transition: background-color 0.2s, color 0.2s; }
-    .tab-content { display: none; }
-    .tab-content.active { display: block; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Hatchery HR Suite Pro</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body { transition: background-color 0.2s ease, color 0.2s ease; -webkit-tap-highlight-color: transparent; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+    </style>
 </head>
-<body class="bg-slate-50 text-slate-900 font-sans min-h-screen">
+<body class="bg-slate-50 text-slate-900 font-sans min-h-screen dark:bg-[#0b1329] dark:text-white">
 
-  <header class="p-4 border-b bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 flex justify-between items-center">
-    <div class="flex items-center gap-2">
-      <i data-lucide="waves" class="text-blue-600 w-6 h-6"></i>
-      <h1 class="text-lg font-bold tracking-tight dark:text-white">Hatchery HR Pro</h1>
-    </div>
-    <span id="themeBadge" class="text-xs px-2.5 py-1 rounded-full font-medium"></span>
-  </header>
-
-  <nav class="flex bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 text-sm">
-    <button onclick="switchTab('ot-tab')" id="ot-tab-btn" class="flex-1 py-3 text-center font-semibold border-b-2 border-blue-600 text-blue-600 dark:text-blue-400">
-      Log OT
-    </button>
-    <button onclick="switchTab('leave-tab')" id="leave-tab-btn" class="flex-1 py-3 text-center font-semibold border-b-2 border-transparent text-slate-500">
-      Apply Leave
-    </button>
-    <button onclick="switchTab('mgr-tab')" id="mgr-tab-btn" class="flex-1 py-3 text-center font-semibold border-b-2 border-transparent text-slate-500 flex justify-center items-center gap-1">
-      <i data-lucide="shield-check" class="w-4 h-4"></i> Manager
-    </button>
-  </nav>
-
-  <main class="p-4 max-w-xl mx-auto pb-16">
-
-    <!-- OVERTIME LOGGING MODULE -->
-    <div id="ot-tab" class="tab-content active">
-      <form id="otForm" class="space-y-4">
-        <div>
-          <label class="block text-xs font-bold uppercase tracking-wider mb-1 text-slate-600 dark:text-slate-400">Operator Name</label>
-          <input type="text" id="ot_name" required class="w-full p-3 rounded-lg border dark:border-slate-700 bg-white dark:bg-slate-800 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none">
+    <header class="sticky top-0 z-40 border-b bg-white border-slate-200 dark:bg-[#0b1329] dark:border-[#1c2541] px-4 py-3 flex justify-between items-center shadow-sm">
+        <div class="flex items-center gap-2">
+            <i data-lucide="waves" class="text-blue-600 dark:text-[#5bc0be] w-6 h-6"></i>
+            <div>
+                <h1 class="text-md font-black tracking-tight uppercase">Hatchery HR Pro</h1>
+                <p id="themeBadge" class="text-[10px] font-bold tracking-wider uppercase text-slate-400">Loading Mode...</p>
+            </div>
         </div>
-
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="block text-xs font-bold uppercase tracking-wider mb-1 text-slate-600 dark:text-slate-400">Day Designation</label>
-            <select id="ot_day_type" class="w-full p-3 rounded-lg border dark:border-slate-700 bg-white dark:bg-slate-800 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none">
-              <option value="normal">Normal Working Day</option>
-              <option value="off">Rest Day / Off Day</option>
-              <option value="public">Public Holiday</option>
-            </select>
-          </div>
-          <div>
-            <label class="block text-xs font-bold uppercase tracking-wider mb-1 text-slate-600 dark:text-slate-400">OT Windows</label>
-            <select id="ot_shift_type" onchange="toggleOTFields()" class="w-full p-3 rounded-lg border dark:border-slate-700 bg-white dark:bg-slate-800 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none">
-              <option value="Same Day">Standard Same Day</option>
-              <option value="Overnight">Overnight / Cross-Day</option>
-            </select>
-          </div>
+        <div class="flex items-center gap-2 bg-slate-100 dark:bg-[#1c2541] px-3 py-1 rounded-full border border-slate-300 dark:border-[#3a506b]">
+            <span class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span>
+            <span class="text-[10px] font-black text-emerald-600 dark:text-emerald-400 uppercase tracking-wider">Sync Active</span>
         </div>
+    </header>
 
-        <!-- Dynamic Group Switching -->
-        <div id="wrapper_same_day" class="p-4 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 grid grid-cols-2 gap-3">
-          <div>
-            <label class="block text-xs font-semibold mb-1 dark:text-slate-300">Work Date</label>
-            <input type="date" id="ot_date_single" class="w-full p-2.5 rounded bg-white dark:bg-slate-700 dark:text-white border dark:border-slate-600">
-          </div>
-          <div>
-            <label class="block text-xs font-semibold mb-1 dark:text-slate-300">Total OT Hours</label>
-            <input type="number" id="ot_hours_raw" step="0.5" placeholder="e.g. 2.5" class="w-full p-2.5 rounded bg-white dark:bg-slate-700 dark:text-white border dark:border-slate-600">
-          </div>
-        </div>
-
-        <div id="wrapper_overnight" class="hidden p-4 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 grid grid-cols-2 gap-3">
-          <div>
-            <label class="block text-xs font-semibold mb-1 dark:text-slate-300">Start Date & Time</label>
-            <input type="datetime-local" id="ot_start" class="w-full p-2.5 rounded bg-white dark:bg-slate-700 dark:text-white border dark:border-slate-600">
-          </div>
-          <div>
-            <label class="block text-xs font-semibold mb-1 dark:text-slate-300">End Date & Time</label>
-            <input type="datetime-local" id="ot_end" class="w-full p-2.5 rounded bg-white dark:bg-slate-700 dark:text-white border dark:border-slate-600">
-          </div>
-        </div>
-
-        <button type="button" onclick="submitForm('OT')" class="w-full py-3.5 bg-blue-600 text-white font-bold rounded-lg shadow hover:bg-blue-700 active:scale-98 transition flex justify-center items-center gap-2">
-          <i data-lucide="send" class="w-4 h-4"></i> Secure Submit to Sheet
+    <nav class="flex sticky top-[53px] z-30 bg-white dark:bg-[#0b1329] border-b border-slate-200 dark:border-[#1c2541] text-xs font-black uppercase tracking-wider overflow-x-auto">
+        <button onclick="switchTab('ot-tab')" id="ot-tab-btn" class="flex-1 min-w-[90px] py-3 text-center border-b-2 border-blue-600 text-blue-600 dark:text-[#5bc0be] dark:border-[#5bc0be]">
+            Log OT / Spawning
         </button>
-      </form>
-    </div>
-
-    <!-- LEAVE APPLICATION MODULE -->
-    <div id="leave-tab" class="tab-content">
-      <form id="leaveForm" class="space-y-4">
-        <div>
-          <label class="block text-xs font-bold uppercase tracking-wider mb-1 text-slate-600 dark:text-slate-400">Operator Name</label>
-          <input type="text" id="leave_name" required class="w-full p-3 rounded-lg border dark:border-slate-700 bg-white dark:bg-slate-800 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none">
-        </div>
-
-        <div>
-          <label class="block text-xs font-bold uppercase tracking-wider mb-1 text-slate-600 dark:text-slate-400">Leave Type</label>
-          <select id="leave_type" class="w-full p-3 rounded-lg border dark:border-slate-700 bg-white dark:bg-slate-800 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none">
-            <option value="Annual Leave">Annual Leave</option>
-            <option value="Medical Leave">Medical Leave</option>
-            <option value="Emergency Leave">Emergency Leave</option>
-            <option value="Unpaid Leave">Unpaid Leave</option>
-          </select>
-        </div>
-
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="block text-xs font-bold uppercase tracking-wider mb-1 text-slate-600 dark:text-slate-400">Start Date</label>
-            <input type="date" id="leave_start" required class="w-full p-3 rounded-lg border dark:border-slate-700 bg-white dark:bg-slate-800 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none">
-          </div>
-          <div>
-            <label class="block text-xs font-bold uppercase tracking-wider mb-1 text-slate-600 dark:text-slate-400">Total Days</label>
-            <!-- Changed to days input instead of end date -->
-            <input type="number" id="leave_days" min="0.5" step="0.5" placeholder="e.g. 1.5" required class="w-full p-3 rounded-lg border dark:border-slate-700 bg-white dark:bg-slate-800 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none">
-          </div>
-        </div>
-
-        <div>
-          <label class="block text-xs font-bold uppercase tracking-wider mb-1 text-slate-600 dark:text-slate-400">Reason</label>
-          <textarea id="leave_reason" rows="3" required class="w-full p-3 rounded-lg border dark:border-slate-700 bg-white dark:bg-slate-800 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none"></textarea>
-        </div>
-
-        <button type="button" onclick="submitForm('Leave')" class="w-full py-3.5 bg-blue-600 text-white font-bold rounded-lg shadow hover:bg-blue-700 active:scale-98 transition flex justify-center items-center gap-2">
-          <i data-lucide="calendar" class="w-4 h-4"></i> Log Leave Request
+        <button onclick="switchTab('leave-tab')" id="leave-tab-btn" class="flex-1 min-w-[90px] py-3 text-center border-b-2 border-transparent text-slate-500 hover:text-slate-700 dark:hover:text-slate-300">
+            Apply Leave
         </button>
-      </form>
-    </div>
+        <button onclick="switchTab('balance-tab')" id="balance-tab-btn" class="flex-1 min-w-[90px] py-3 text-center border-b-2 border-transparent text-slate-500 hover:text-slate-700 dark:hover:text-slate-300">
+            My Balances
+        </button>
+        <button onclick="switchTab('mgr-tab')" id="mgr-tab-btn" class="flex-1 min-w-[105px] py-3 text-center border-b-2 border-transparent text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 flex justify-center items-center gap-1">
+            <i data-lucide="shield-check" class="w-3.5 h-3.5"></i> Manager
+        </button>
+    </nav>
 
-    <!-- MANAGER EXECUTIVE TERMINAL -->
-    <div id="mgr-tab" class="tab-content">
-      <div id="gatekeeper_panel" class="text-center p-8 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl max-w-sm mx-auto space-y-4">
-        <i data-lucide="lock" class="w-8 h-8 text-amber-500 mx-auto"></i>
-        <h3 class="text-md font-bold dark:text-white">Identity Terminal Credentials</h3>
-        <input type="password" id="mgr_pin" placeholder="Enter PIN (3653)" class="w-full p-3 text-center text-lg tracking-widest rounded border dark:border-slate-700 dark:bg-slate-800 dark:text-white">
-        <button type="button" onclick="unlockDashboard()" class="w-full py-2.5 bg-slate-900 dark:bg-blue-600 text-white font-bold rounded shadow">Authenticate</button>
-      </div>
+    <main class="p-4 max-w-xl mx-auto pb-24">
 
-      <div id="dashboard_panel" class="hidden space-y-6">
-        <div class="flex items-center justify-between">
-          <h2 class="text-lg font-black tracking-tight dark:text-white">Live Performance Log</h2>
-          <button onclick="fetchSheetData()" class="p-2 rounded bg-slate-200 dark:bg-slate-800 dark:text-white text-xs font-semibold flex items-center gap-1">
-            <i data-lucide="refresh-cw" class="w-3 h-3"></i> Sync
-          </button>
+        <div id="ot-tab" class="tab-content active space-y-4">
+            <div class="bg-white dark:bg-[#1c2541] p-4 rounded-xl border-2 border-slate-200 dark:border-[#3a506b] shadow-sm">
+                <h2 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-3">Work Log Submission</h2>
+                <form id="otForm" class="space-y-4">
+                    <div>
+                        <label class="block text-[10px] font-black uppercase tracking-wider mb-1 text-slate-500">Worker / Operator Name</label>
+                        <input type="text" id="ot_name" required placeholder="Enter full name" class="w-full p-3 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 dark:text-white focus:ring-2 focus:ring-blue-500 dark:focus:ring-[#5bc0be] outline-none font-medium">
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-[10px] font-black uppercase tracking-wider mb-1 text-slate-500">Day Designation</label>
+                            <select id="ot_day_type" class="w-full p-3 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none font-semibold">
+                                <option value="Normal">Normal Working Day</option>
+                                <option value="Rest Day">Rest Day / Off Day</option>
+                                <option value="Public Holiday">Public Holiday</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-black uppercase tracking-wider mb-1 text-slate-500">Shift Window</label>
+                            <select id="ot_shift_type" onchange="toggleOTFields()" class="w-full p-3 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none font-semibold">
+                                <option value="Same Day">Standard Same Day</option>
+                                <option value="Overnight">Overnight / Night Spawning</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div id="wrapper_same_day" class="p-3 rounded-lg bg-slate-100 dark:bg-[#0b1329] border border-slate-200 dark:border-slate-700 grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-bold mb-1 text-slate-600 dark:text-slate-300">Work Date</label>
+                            <input type="date" id="ot_date_single" class="w-full p-2 rounded bg-white dark:bg-slate-700 border dark:border-slate-600 font-semibold text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold mb-1 text-slate-600 dark:text-slate-300">Total OT Hours</label>
+                            <input type="number" id="ot_hours_raw" step="0.5" placeholder="e.g. 3.5" class="w-full p-2 rounded bg-white dark:bg-slate-700 border dark:border-slate-600 font-semibold text-sm">
+                        </div>
+                    </div>
+
+                    <div id="wrapper_overnight" class="hidden p-3 rounded-lg bg-slate-100 dark:bg-[#0b1329] border border-slate-200 dark:border-slate-700 grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-bold mb-1 text-slate-600 dark:text-slate-300">Start Timestamp</label>
+                            <input type="datetime-local" id="ot_start" class="w-full p-2 rounded bg-white dark:bg-slate-700 border dark:border-slate-600 text-xs font-semibold">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold mb-1 text-slate-600 dark:text-slate-300">End Timestamp</label>
+                            <input type="datetime-local" id="ot_end" class="w-full p-2 rounded bg-white dark:bg-slate-700 border dark:border-slate-600 text-xs font-semibold">
+                        </div>
+                    </div>
+
+                    <div class="p-4 rounded-xl border-2 border-dashed border-blue-400 dark:border-[#3a506b] bg-blue-50/50 dark:bg-[#1c2541]/50">
+                        <label class="block text-[10px] font-black uppercase tracking-widest text-blue-600 dark:text-[#5bc0be] mb-2">Compensation Method</label>
+                        <div class="grid grid-cols-2 gap-3">
+                            <label class="flex items-center gap-2 p-2 rounded bg-white dark:bg-slate-800 border cursor-pointer shadow-sm">
+                                <input type="radio" name="ot_comp_rule" value="Standard Pay" checked class="w-4 h-4 accent-blue-500">
+                                <div class="text-left">
+                                    <p class="text-xs font-black uppercase">Standard OT Pay</p>
+                                    <p class="text-[9px] text-slate-400 font-medium">Added directly to payroll</p>
+                                </div>
+                            </label>
+                            <label class="flex items-center gap-2 p-2 rounded bg-white dark:bg-slate-800 border cursor-pointer shadow-sm">
+                                <input type="radio" name="ot_comp_rule" value="Extra Holiday" class="w-4 h-4 accent-emerald-500">
+                                <div class="text-left">
+                                    <p class="text-xs font-black uppercase text-emerald-600 dark:text-emerald-400">Extra Holiday</p>
+                                    <p class="text-[9px] text-slate-400 font-medium">Increases leave balance</p>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <button type="button" onclick="submitForm('OT')" class="w-full py-3.5 bg-blue-600 dark:bg-[#5bc0be] text-white dark:text-slate-900 font-black text-sm uppercase tracking-wider rounded-lg shadow hover:opacity-90 active:scale-98 transition flex justify-center items-center gap-2">
+                        <i data-lucide="send" class="w-4 h-4"></i> Secure Submit to Records
+                    </button>
+                </form>
+            </div>
         </div>
 
-        <div class="space-y-2">
-          <h3 class="text-xs font-bold uppercase tracking-wider text-slate-500">Overtime Overview</h3>
-          <div class="overflow-x-auto rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm">
-            <table class="w-full text-left border-collapse text-xs">
-              <thead>
-                <tr class="bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 font-bold border-b border-slate-200 dark:border-slate-800">
-                  <th class="p-3 whitespace-nowrap">Operator</th>
-                  <th class="p-3 whitespace-nowrap">Day Type</th>
-                  <th class="p-3 whitespace-nowrap">Hours</th>
-                  <th class="p-3 whitespace-nowrap">Rule Applied</th>
-                  <th class="p-3 whitespace-nowrap">Payable Hours</th>
-                  <th class="p-3 whitespace-nowrap">Timeline Info</th>
-                </tr>
-              </thead>
-              <tbody id="table_ot_body" class="divide-y divide-slate-100 dark:divide-slate-800 dark:text-slate-300">
-                <tr><td colspan="6" class="p-4 text-center text-slate-400">Awaiting sync...</td></tr>
-              </tbody>
-            </table>
-          </div>
+        <div id="leave-tab" class="tab-content space-y-4">
+            <div class="bg-white dark:bg-[#1c2541] p-4 rounded-xl border-2 border-slate-200 dark:border-[#3a506b] shadow-sm">
+                <h2 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-3">Leave Application Entry</h2>
+                <form id="leaveForm" class="space-y-4">
+                    <div>
+                        <label class="block text-[10px] font-black uppercase tracking-wider mb-1 text-slate-500">Worker / Operator Name</label>
+                        <input type="text" id="leave_name" required placeholder="Enter full name" class="w-full p-3 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none font-medium">
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-[10px] font-black uppercase tracking-wider mb-1 text-slate-500">Leave Type</label>
+                            <select id="leave_type" class="w-full p-3 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none font-bold">
+                                <option value="Annual Leave">Annual Leave</option>
+                                <option value="Extra Holiday Used">Extra Holiday (Comp Time)</option>
+                                <option value="Medical Leave">Medical Leave</option>
+                                <option value="Emergency Leave">Emergency Leave</option>
+                                <option value="Unpaid Leave">Unpaid Leave</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-black uppercase tracking-wider mb-1 text-slate-500">Start Date</label>
+                            <input type="date" id="leave_start" required class="w-full p-3 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 dark:text-white font-semibold text-sm">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-[10px] font-black uppercase tracking-wider mb-1 text-slate-500">Duration (Days Requested)</label>
+                        <input type="number" id="leave_days" min="0.5" step="0.5" placeholder="e.g., 1 or 1.5" required class="w-full p-3 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 dark:text-white font-bold outline-none">
+                    </div>
+
+                    <div>
+                        <label class="block text-[10px] font-black uppercase tracking-wider mb-1 text-slate-500">Operational Reason / Memo</label>
+                        <textarea id="leave_reason" rows="3" required placeholder="Provide concise context details..." class="w-full p-3 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none font-medium text-sm"></textarea>
+                    </div>
+
+                    <button type="button" onclick="submitForm('Leave')" class="w-full py-3.5 bg-blue-600 dark:bg-[#5bc0be] text-white dark:text-slate-900 font-black text-sm uppercase tracking-wider rounded-lg shadow hover:opacity-90 active:scale-98 transition flex justify-center items-center gap-2">
+                        <i data-lucide="calendar-plus" class="w-4 h-4"></i> Log Leave Request
+                    </button>
+                </form>
+            </div>
         </div>
 
-        <div class="space-y-2">
-          <h3 class="text-xs font-bold uppercase tracking-wider text-slate-500">Leave Ledger View</h3>
-          <div class="overflow-x-auto rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm">
-            <table class="w-full text-left border-collapse text-xs">
-              <thead>
-                <tr class="bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 font-bold border-b border-slate-200 dark:border-slate-800">
-                  <th class="p-3 whitespace-nowrap">Operator</th>
-                  <th class="p-3 whitespace-nowrap">Leave Category</th>
-                  <th class="p-3 whitespace-nowrap">Start Date</th>
-                  <th class="p-3 whitespace-nowrap">Total Days</th>
-                  <th class="p-3 whitespace-nowrap">Reason</th>
-                </tr>
-              </thead>
-              <tbody id="table_leave_body" class="divide-y divide-slate-100 dark:divide-slate-800 dark:text-slate-300">
-                <tr><td colspan="5" class="p-4 text-center text-slate-400">Awaiting sync...</td></tr>
-              </tbody>
-            </table>
-          </div>
+        <div id="balance-tab" class="tab-content space-y-4">
+            <div class="bg-white dark:bg-[#1c2541] p-4 rounded-xl border-2 border-slate-200 dark:border-[#3a506b] shadow-sm">
+                <h2 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-1">Worker Ledger Lookup</h2>
+                <p class="text-xs text-slate-500 mb-4">Select or type your name to verify available remaining balances.</p>
+                
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-[10px] font-black uppercase tracking-wider mb-1 text-slate-500">Select Worker Name</label>
+                        <input type="text" id="balance_worker_search" oninput="triggerBalanceLookup()" placeholder="Type name to retrieve live data..." list="worker_suggestions" class="w-full p-3 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 dark:text-white font-bold tracking-wide outline-none">
+                        <datalist id="worker_suggestions"></datalist>
+                    </div>
+
+                    <div id="balance_display_container" class="grid grid-cols-3 gap-2 pt-2">
+                        <div class="bg-slate-100 dark:bg-[#0b1329] p-3 rounded-xl border dark:border-slate-800 text-center">
+                            <p class="text-[9px] font-black uppercase text-slate-400 tracking-wider">Annual Leave</p>
+                            <p id="lbl_annual_bal" class="text-lg font-black text-slate-700 dark:text-slate-200">0.0</p>
+                            <span class="text-[9px] text-slate-400 block font-medium">Days Left</span>
+                        </div>
+                        <div class="bg-emerald-50/50 dark:bg-emerald-950/20 p-3 rounded-xl border border-emerald-200 dark:border-emerald-900/50 text-center">
+                            <p class="text-[9px] font-black uppercase text-emerald-600 dark:text-emerald-400 tracking-wider">Extra Holidays</p>
+                            <p id="lbl_extra_bal" class="text-lg font-black text-emerald-600 dark:text-emerald-400">0.0</p>
+                            <span class="text-[9px] text-slate-400 block font-medium">Earned Days</span>
+                        </div>
+                        <div class="bg-slate-100 dark:bg-[#0b1329] p-3 rounded-xl border dark:border-slate-800 text-center">
+                            <p class="text-[9px] font-black uppercase text-slate-400 tracking-wider">Medical Leave</p>
+                            <p id="lbl_medical_bal" class="text-lg font-black text-slate-700 dark:text-slate-200">0.0</p>
+                            <span class="text-[9px] text-slate-400 block font-medium">Days Left</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
 
-  </main>
+        <div id="mgr-tab" class="tab-content space-y-4">
+            <div id="gatekeeper_panel" class="text-center p-8 bg-white dark:bg-[#1c2541] border-2 border-slate-200 dark:border-[#3a506b] rounded-xl max-w-sm mx-auto space-y-4 shadow-sm">
+                <i data-lucide="lock" class="w-8 h-8 text-amber-500 mx-auto animate-pulse"></i>
+                <div>
+                    <h3 class="text-md font-black uppercase tracking-wide">Identity Terminal Credentials</h3>
+                    <p class="text-xs text-slate-400">Enter secure operational management pin</p>
+                </div>
+                <input type="password" id="mgr_pin" placeholder="••••" class="w-full p-3 text-center text-xl tracking-widest rounded-lg border dark:border-slate-700 dark:bg-slate-800 dark:text-white font-black">
+                <button type="button" onclick="unlockDashboard()" class="w-full py-2.5 bg-slate-900 dark:bg-blue-600 text-white font-black rounded-lg uppercase tracking-wider text-xs">Authenticate Console</button>
+            </div>
 
-  <script>
-    // REPLACE THIS URL WITH YOUR NEW GOOGLE APPS SCRIPT DEPLOYMENT URL
-    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzGunqr_-X6YExc7P-M8HBWLBQD9oJe2jLqu4thp1-Hw4wv2X6ZGU9NZTWzt3BA8AILTQ/exec"; 
-    const DRAFT_KEY = "hatchery_hr_v2_cache";
-    const MASTER_PIN = "3653";
+            <div id="dashboard_panel" class="hidden space-y-6">
+                <div class="flex items-center justify-between border-b pb-2 dark:border-slate-800">
+                    <div>
+                        <h2 class="text-xs font-black text-slate-400 uppercase tracking-widest">Executive Terminal / 최고 경영자 콘솔</h2>
+                        <h3 class="text-base font-black uppercase tracking-tight">Active Matrix Overview</h3>
+                    </div>
+                    <button onclick="fetchSheetData()" class="p-2 rounded bg-slate-200 dark:bg-slate-800 dark:text-white text-xs font-black flex items-center gap-1 uppercase tracking-wider border dark:border-slate-700">
+                        <i data-lucide="refresh-cw" class="w-3 h-3"></i> Sync Sheet
+                    </button>
+                </div>
 
-    function applyTheme() {
-      const hr = new Date().getHours();
-      const night = (hr >= 18 || hr < 6);
-      const b = document.getElementById("themeBadge");
-      if(night) {
-        document.documentElement.classList.add('dark');
-        document.body.className = "bg-slate-950 text-slate-100 font-sans min-h-screen";
-        b.innerText = "Night Shift";
-        b.className = "text-xs px-2.5 py-1 rounded-full font-medium bg-slate-800 text-slate-300 border border-slate-700";
-      } else {
-        document.documentElement.classList.remove('dark');
-        document.body.className = "bg-slate-50 text-slate-900 font-sans min-h-screen";
-        b.innerText = "Day Ops Mode";
-        b.className = "text-xs px-2.5 py-1 rounded-full font-medium bg-blue-100 text-blue-800";
-      }
-    }
+                <div class="space-y-2">
+                    <h3 class="text-xs font-black uppercase tracking-wider text-blue-500">Active Leave Registry Balances</h3>
+                    <div class="overflow-x-auto rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#1c2541] shadow-sm">
+                        <table class="w-full text-left border-collapse text-xs">
+                            <thead>
+                                <tr class="bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 font-black uppercase text-[10px] border-b dark:border-slate-700">
+                                    <th class="p-3">Operator Name</th>
+                                    <th class="p-3">Annual (Left)</th>
+                                    <th class="p-3">Extra Holiday</th>
+                                    <th class="p-3">Medical (Left)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="table_balance_body" class="divide-y divide-slate-100 dark:divide-slate-800 font-medium dark:text-slate-300">
+                                <tr><td colspan="4" class="p-4 text-center text-slate-400 italic">Awaiting database connection sync...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
 
-    function switchTab(id) {
-      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-      document.getElementById(id).classList.add('active');
-      const tabs = ['ot-tab', 'leave-tab', 'mgr-tab'];
-      tabs.forEach(t => {
-        const btn = document.getElementById(t + '-btn');
-        if(t === id) {
-          btn.className = "flex-1 py-3 text-center font-bold border-b-2 border-blue-600 text-blue-600 dark:text-blue-400";
-        } else {
-          btn.className = "flex-1 py-3 text-center font-semibold border-b-2 border-transparent text-slate-500";
+                <div class="space-y-2">
+                    <h3 class="text-xs font-black uppercase tracking-wider text-slate-400">Overtime Log Transactions</h3>
+                    <div class="overflow-x-auto rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#1c2541] shadow-sm">
+                        <table class="w-full text-left border-collapse text-xs">
+                            <thead>
+                                <tr class="bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 font-black uppercase text-[10px] border-b dark:border-slate-700">
+                                    <th class="p-3">Operator</th>
+                                    <th class="p-3">Hours</th>
+                                    <th class="p-3">Type</th>
+                                    <th class="p-3">Payout Logic Rule</th>
+                                </tr>
+                            </thead>
+                            <tbody id="table_ot_body" class="divide-y divide-slate-100 dark:divide-slate-800 font-medium dark:text-slate-300">
+                                <tr><td colspan="4" class="p-4 text-center text-slate-400 italic">Awaiting database connection sync...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="space-y-2">
+                    <h3 class="text-xs font-black uppercase tracking-wider text-slate-400">Absence & Leave Application Log</h3>
+                    <div class="overflow-x-auto rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#1c2541] shadow-sm">
+                        <table class="w-full text-left border-collapse text-xs">
+                            <thead>
+                                <tr class="bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 font-black uppercase text-[10px] border-b dark:border-slate-700">
+                                    <th class="p-3">Operator</th>
+                                    <th class="p-3">Leave Category</th>
+                                    <th class="p-3">Duration</th>
+                                    <th class="p-3">Reason / Memo</th>
+                                </tr>
+                            </thead>
+                            <tbody id="table_leave_body" class="divide-y divide-slate-100 dark:divide-slate-800 font-medium dark:text-slate-300">
+                                <tr><td colspan="4" class="p-4 text-center text-slate-400 italic">Awaiting database connection sync...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // REPLACE THIS URL WITH YOUR NEW GOOGLE APPS SCRIPT DEPLOYMENT WEBAPP URL
+        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzGunqr_-X6YExc7P-M8HBWLBQD9oJe2jLqu4thp1-Hw4wv2X6ZGU9NZTWzt3BA8AILTQ/exec"; 
+        const CACHE_KEY = "hatchery_hr_v3_cache";
+        const MASTER_PIN = "3653";
+        
+        // Cache mapping storage array local copy
+        let liveBalancesData = [];
+
+        function calculateThemeScope() {
+            const currentHour = new Date().getHours();
+            const badge = document.getElementById("themeBadge");
+            const isNight = (currentHour >= 18 || currentHour < 6);
+            
+            if (isNight) {
+                document.documentElement.classList.add('dark');
+                badge.innerText = "Night Shift Operations Mode";
+                badge.className = "text-[10px] font-bold tracking-wider uppercase text-[#5bc0be]";
+            } else {
+                document.documentElement.classList.remove('dark');
+                badge.innerText = "Day Operations Mode";
+                badge.className = "text-[10px] font-bold tracking-wider uppercase text-blue-600";
+            }
         }
-      });
-    }
 
-    function toggleOTFields() {
-      const type = document.getElementById("ot_shift_type").value;
-      if (type === "Same Day") {
-        document.getElementById("wrapper_same_day").classList.remove("hidden");
-        document.getElementById("wrapper_overnight").classList.add("hidden");
-      } else {
-        document.getElementById("wrapper_same_day").classList.add("hidden");
-        document.getElementById("wrapper_overnight").classList.remove("hidden");
-      }
-    }
+        function switchTab(targetTabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.getElementById(targetTabId).classList.add('active');
+            
+            const tabButtonMap = ['ot-tab', 'leave-tab', 'balance-tab', 'mgr-tab'];
+            tabButtonMap.forEach(t => {
+                const button = document.getElementById(t + '-btn');
+                if (t === targetTabId) {
+                    button.className = "flex-1 min-w-[90px] py-3 text-center border-b-2 border-blue-600 text-blue-600 dark:text-[#5bc0be] dark:border-[#5bc0be] font-black";
+                } else {
+                    button.className = "flex-1 min-w-[90px] py-3 text-center border-b-2 border-transparent text-slate-500 font-semibold";
+                }
+            });
+        }
 
-    function unlockDashboard() {
-      const pin = document.getElementById("mgr_pin").value;
-      if(pin === MASTER_PIN) {
-        document.getElementById("gatekeeper_panel").classList.add("hidden");
-        document.getElementById("dashboard_panel").classList.remove("hidden");
-        fetchSheetData();
-      } else {
-        alert("Access Denied. Incorrect PIN.");
-      }
-    }
+        function toggleOTFields() {
+            const shiftType = document.getElementById("ot_shift_type").value;
+            if (shiftType === "Same Day") {
+                document.getElementById("wrapper_same_day").classList.remove("hidden");
+                document.getElementById("wrapper_overnight").classList.add("hidden");
+            } else {
+                document.getElementById("wrapper_same_day").classList.add("hidden");
+                document.getElementById("wrapper_overnight").classList.remove("hidden");
+            }
+        }
 
-    function cacheState() {
-      const state = {
-        otName: document.getElementById("ot_name").value,
-        otDayType: document.getElementById("ot_day_type").value,
-        otShiftType: document.getElementById("ot_shift_type").value,
-        otDateSingle: document.getElementById("ot_date_single").value,
-        otHoursRaw: document.getElementById("ot_hours_raw").value,
-        otStart: document.getElementById("ot_start").value,
-        otEnd: document.getElementById("ot_end").value,
-        lName: document.getElementById("leave_name").value,
-        lType: document.getElementById("leave_type").value,
-        lStart: document.getElementById("leave_start").value,
-        lDays: document.getElementById("leave_days").value,
-        lReason: document.getElementById("leave_reason").value,
-      };
-      localStorage.setItem(DRAFT_KEY, JSON.stringify(state));
-    }
+        function unlockDashboard() {
+            const pinInputValue = document.getElementById("mgr_pin").value;
+            if (pinInputValue === MASTER_PIN) {
+                document.getElementById("gatekeeper_panel").classList.add("hidden");
+                document.getElementById("dashboard_panel").classList.remove("hidden");
+                fetchSheetData();
+            } else {
+                alert("Access Denied. Secret operational matrix PIN signature incorrect.");
+            }
+        }
 
-    function pullCache() {
-      const cache = localStorage.getItem(DRAFT_KEY);
-      if(!cache) return;
-      const data = JSON.parse(cache);
-      document.getElementById("ot_name").value = data.otName || "";
-      document.getElementById("ot_day_type").value = data.otDayType || "normal";
-      document.getElementById("ot_shift_type").value = data.otShiftType || "Same Day";
-      document.getElementById("ot_date_single").value = data.otDateSingle || "";
-      document.getElementById("ot_hours_raw").value = data.otHoursRaw || "";
-      document.getElementById("ot_start").value = data.otStart || "";
-      document.getElementById("ot_end").value = data.otEnd || "";
-      document.getElementById("leave_name").value = data.lName || "";
-      document.getElementById("leave_type").value = data.lType || "Annual Leave";
-      document.getElementById("leave_start").value = data.lStart || "";
-      document.getElementById("leave_days").value = data.lDays || "";
-      document.getElementById("leave_reason").value = data.lReason || "";
-      toggleOTFields();
-    }
+        function saveFormCache() {
+            const dataset = {
+                otName: document.getElementById("ot_name").value,
+                otDayType: document.getElementById("ot_day_type").value,
+                otShiftType: document.getElementById("ot_shift_type").value,
+                otDateSingle: document.getElementById("ot_date_single").value,
+                otHoursRaw: document.getElementById("ot_hours_raw").value,
+                otStart: document.getElementById("ot_start").value,
+                otEnd: document.getElementById("ot_end").value,
+                otComp: document.querySelector('input[name="ot_comp_rule"]:checked')?.value || "Standard Pay",
+                lName: document.getElementById("leave_name").value,
+                lType: document.getElementById("leave_type").value,
+                lStart: document.getElementById("leave_start").value,
+                lDays: document.getElementById("leave_days").value,
+                lReason: document.getElementById("leave_reason").value,
+                workerSearch: document.getElementById("balance_worker_search").value
+            };
+            localStorage.setItem(CACHE_KEY, JSON.stringify(dataset));
+        }
 
-    async function submitForm(type) {
-      if(WEB_APP_URL.includes("YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE")) {
-        alert("Error: You forgot to paste the Web App URL into the HTML code."); return;
-      }
-      
-      let payload = { formType: type };
-      
-      if(type === "OT") {
-        payload.employeeName = document.getElementById("ot_name").value;
-        payload.dayType = document.getElementById("ot_day_type").value;
-        payload.shiftType = document.getElementById("ot_shift_type").value;
-        payload.dateSingle = document.getElementById("ot_date_single").value;
-        payload.rawHours = document.getElementById("ot_hours_raw").value;
-        payload.startTime = document.getElementById("ot_start").value;
-        payload.endTime = document.getElementById("ot_end").value;
-        if(!payload.employeeName) { alert("Please enter Operator Name."); return; }
-      } else {
-        payload.employeeName = document.getElementById("leave_name").value;
-        payload.leaveType = document.getElementById("leave_type").value;
-        payload.startDate = document.getElementById("leave_start").value;
-        payload.durationDays = document.getElementById("leave_days").value;
-        payload.reason = document.getElementById("leave_reason").value;
-        if(!payload.employeeName || !payload.startDate || !payload.durationDays) { alert("Missing required leave inputs."); return; }
-      }
+        function loadFormCache() {
+            const cachedPayloadString = localStorage.getItem(CACHE_KEY);
+            if (!cachedPayloadString) return;
+            const item = JSON.parse(cachedPayloadString);
+            
+            document.getElementById("ot_name").value = item.otName || "";
+            document.getElementById("ot_day_type").value = item.otDayType || "Normal";
+            document.getElementById("ot_shift_type").value = item.otShiftType || "Same Day";
+            document.getElementById("ot_date_single").value = item.otDateSingle || "";
+            document.getElementById("ot_hours_raw").value = item.otHoursRaw || "";
+            document.getElementById("ot_start").value = item.otStart || "";
+            document.getElementById("ot_end").value = item.otEnd || "";
+            document.getElementById("leave_name").value = item.lName || "";
+            document.getElementById("leave_type").value = item.lType || "Annual Leave";
+            document.getElementById("leave_start").value = item.lStart || "";
+            document.getElementById("leave_days").value = item.lDays || "";
+            document.getElementById("leave_reason").value = item.lReason || "";
+            document.getElementById("balance_worker_search").value = item.workerSearch || "";
+            
+            if (item.otComp) {
+                const radioTarget = document.querySelector(`input[name="ot_comp_rule"][value="${item.otComp}"]`);
+                if (radioTarget) radioTarget.checked = true;
+            }
+            
+            toggleOTFields();
+        }
 
-      try {
-        await fetch(WEB_APP_URL, {
-          method: "POST",
-          mode: "no-cors",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload)
+        async function submitForm(type) {
+            if (WEB_APP_URL.includes("YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE")) {
+                alert("Error Configuration Trace: Web App execution URL string parameter is unassigned.");
+                return;
+            }
+
+            let payload = { formType: type };
+
+            if (type === "OT") {
+                payload.employeeName = document.getElementById("ot_name").value.trim();
+                payload.dayType = document.getElementById("ot_day_type").value;
+                payload.shiftType = document.getElementById("ot_shift_type").value;
+                payload.dateSingle = document.getElementById("ot_date_single").value;
+                payload.rawHours = document.getElementById("ot_hours_raw").value;
+                payload.startTime = document.getElementById("ot_start").value;
+                payload.endTime = document.getElementById("ot_end").value;
+                payload.compensationRule = document.querySelector('input[name="ot_comp_rule"]:checked').value;
+                
+                if (!payload.employeeName) { alert("Missing parameter data: Employee signature identity text box blank."); return; }
+            } else {
+                payload.employeeName = document.getElementById("leave_name").value.trim();
+                payload.leaveType = document.getElementById("leave_type").value;
+                payload.startDate = document.getElementById("leave_start").value;
+                payload.durationDays = document.getElementById("leave_days").value;
+                payload.reason = document.getElementById("leave_reason").value.trim();
+                
+                if (!payload.employeeName || !payload.startDate || !payload.durationDays) { alert("Incomplete operational leave structural bounds recorded."); return; }
+            }
+
+            try {
+                await fetch(WEB_APP_URL, {
+                    method: "POST",
+                    mode: "no-cors",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(payload)
+                });
+
+                alert("Operational Sheet Pipeline Sync Status: Processing Completed Successful!");
+                document.getElementById(type === "OT" ? "otForm" : "leaveForm").reset();
+                saveFormCache();
+                toggleOTFields();
+                fetchSheetData(); // Refresh metrics asynchronously
+            } catch (err) {
+                alert("Matrix Framework Pipeline Error. Connection handshake timed out.");
+            }
+        }
+
+        async function fetchSheetData() {
+            try {
+                const response = await fetch(WEB_APP_URL);
+                const dataset = await response.json();
+                
+                // Assign to global structural data cache lookups
+                liveBalancesData = dataset.balances || [];
+                
+                // Refresh data suggestions drop box
+                const suggestionBox = document.getElementById("worker_suggestions");
+                suggestionBox.innerHTML = liveBalancesData.map(b => `<option value="${b.name}">`).join('');
+
+                // Render dynamic Balance metrics sheet overview table
+                const balBody = document.getElementById("table_balance_body");
+                balBody.innerHTML = liveBalancesData.length ? liveBalancesData.map(row => `
+                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50">
+                        <td class="p-3 font-bold text-slate-800 dark:text-slate-200">${row.name}</td>
+                        <td class="p-3 font-semibold text-blue-600 dark:text-blue-400">${row.annualLeaveLeft} Days</td>
+                        <td class="p-3 font-semibold text-emerald-600 dark:text-emerald-400">${row.extraHolidayEarned} Days</td>
+                        <td class="p-3 text-slate-500">${row.medicalLeaveLeft} Days</td>
+                    </tr>
+                `).join('') : `<tr><td colspan="4" class="p-4 text-center text-slate-400">Empty balances table frame.</td></tr>`;
+
+                // Render raw OT entries log view lines inside admin console
+                const otBody = document.getElementById("table_ot_body");
+                otBody.innerHTML = dataset.ot && dataset.ot.length ? dataset.ot.map(row => `
+                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50">
+                        <td class="p-3 font-semibold">${row.name || ''}</td>
+                        <td class="p-3 font-black">${row.hours || '0'} h</td>
+                        <td class="p-3 uppercase text-[10px] tracking-wider text-slate-400">${row.dayType || ''}</td>
+                        <td class="p-3">
+                            <span class="px-2 py-0.5 rounded text-[10px] font-bold ${row.compRule === 'Extra Holiday' ? 'bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300' : 'bg-blue-100 dark:bg-blue-950 text-blue-800 dark:text-blue-300'}">
+                                ${row.compRule || 'Standard Pay'}
+                            </span>
+                        </td>
+                    </tr>
+                `).join('') : `<tr><td colspan="4" class="p-4 text-center text-slate-400">Empty logs recorded.</td></tr>`;
+
+                // Render Leave entries logic trace data maps
+                const leaveBody = document.getElementById("table_leave_body");
+                leaveBody.innerHTML = dataset.leave && dataset.leave.length ? dataset.leave.map(row => `
+                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50">
+                        <td class="p-3 font-semibold">${row.name || ''}</td>
+                        <td class="p-3"><span class="px-2 py-0.5 rounded text-[10px] font-medium bg-amber-100 dark:bg-amber-950 text-amber-800 dark:text-amber-300">${row.type || ''}</span></td>
+                        <td class="p-3 font-bold">${row.days || ''} Day(s)</td>
+                        <td class="p-3 text-slate-400 truncate max-w-[120px] text-[11px]" title="${row.reason || ''}">${row.reason || ''}</td>
+                    </tr>
+                `).join('') : `<tr><td colspan="4" class="p-4 text-center text-slate-400">No leave items.</td></tr>`;
+
+                // Execute dynamic filter match pass immediately if query input contains characters
+                triggerBalanceLookup();
+
+            } catch (err) {
+                console.error("Critical execution thread trace failed to load spreadsheet context array mapping:", err);
+            }
+        }
+
+        function triggerBalanceLookup() {
+            const queryName = document.getElementById("balance_worker_search").value.trim().toLowerCase();
+            
+            const labelAnnual = document.getElementById("lbl_annual_bal");
+            const labelExtra = document.getElementById("lbl_extra_bal");
+            const labelMedical = document.getElementById("lbl_medical_bal");
+
+            if (!queryName) {
+                labelAnnual.innerText = "0.0";
+                labelExtra.innerText = "0.0";
+                labelMedical.innerText = "0.0";
+                return;
+            }
+
+            const matchRecord = liveBalancesData.find(b => b.name.toLowerCase() === queryName);
+
+            if (matchRecord) {
+                labelAnnual.innerText = parseFloat(matchRecord.annualLeaveLeft).toFixed(1);
+                labelExtra.innerText = parseFloat(matchRecord.extraHolidayEarned).toFixed(1);
+                labelMedical.innerText = parseFloat(matchRecord.medicalLeaveLeft).toFixed(1);
+            } else {
+                labelAnnual.innerText = "—";
+                labelExtra.innerText = "—";
+                labelMedical.innerText = "—";
+            }
+            saveFormCache();
+        }
+
+        window.addEventListener("DOMContentLoaded", () => {
+            calculateThemeScope();
+            loadFormCache();
+            lucide.createIcons();
+            
+            // Asynchronously pre-fetch matrix balance files on context initiation loop
+            fetchSheetData();
+
+            document.querySelectorAll("input, select, textarea").forEach(element => {
+                element.addEventListener("input", saveFormCache);
+            });
         });
-        
-        alert("Success: Log saved to Google Sheets!");
-        document.getElementById(type === "OT" ? "otForm" : "leaveForm").reset();
-        cacheState();
-        toggleOTFields();
-      } catch(e) {
-        alert("Connection failed: Please check your internet or Web App URL.");
-      }
-    }
-
-    async function fetchSheetData() {
-      try {
-        const res = await fetch(WEB_APP_URL);
-        const data = await res.json();
-        
-        const otBody = document.getElementById("table_ot_body");
-        otBody.innerHTML = data.ot.length ? data.ot.map(row => `
-          <tr class="hover:bg-slate-50 dark:hover:bg-slate-800">
-            <td class="p-3 font-semibold">${row[1] || ''}</td>
-            <td class="p-3 uppercase tracking-tight text-slate-500">${row[2] || ''}</td>
-            <td class="p-3">${row[4] || ''} h</td>
-            <td class="p-3"><span class="px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-mono text-[10px]">${row[5] || ''}</span></td>
-            <td class="p-3 text-blue-600 dark:text-blue-400 font-bold">${row[6] || ''} h</td>
-            <td class="p-3 text-slate-400 text-[11px] truncate max-w-[120px]">${row[8] || row[3] || ''}</td>
-          </tr>
-        `).join('') : `<tr><td colspan="6" class="p-4 text-center">No records found.</td></tr>`;
-
-        const leaveBody = document.getElementById("table_leave_body");
-        leaveBody.innerHTML = data.leave.length ? data.leave.map(row => `
-          <tr class="hover:bg-slate-50 dark:hover:bg-slate-800">
-            <td class="p-3 font-semibold">${row[1] || ''}</td>
-            <td class="p-3"><span class="px-2 py-0.5 rounded text-[11px] font-medium bg-amber-50 dark:bg-amber-950 text-amber-800 dark:text-amber-300">${row[2] || ''}</span></td>
-            <td class="p-3 text-slate-500">${row[3] || ''}</td>
-            <td class="p-3 font-bold text-slate-700 dark:text-slate-300">${row[4] || ''} Day(s)</td>
-            <td class="p-3 text-slate-600 dark:text-slate-400 truncate max-w-[150px]" title="${row[5] || ''}">${row[5] || ''}</td>
-          </tr>
-        `).join('') : `<tr><td colspan="5" class="p-4 text-center">No records found.</td></tr>`;
-
-      } catch(e) {
-        console.error("Dashboard failed to load:", e);
-        alert("Failed to load dashboard data. Ensure your Web App URL is correct and deployed securely.");
-      }
-    }
-
-    window.addEventListener("DOMContentLoaded", () => {
-      applyTheme();
-      pullCache();
-      lucide.createIcons();
-      document.querySelectorAll("input, select, textarea").forEach(el => {
-        el.addEventListener("input", cacheState);
-      });
-    });
-  </script>
+    </script>
 </body>
 </html>
