@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,12 +15,21 @@
 </head>
 <body class="bg-slate-50 text-slate-900 font-sans min-h-screen dark:bg-[#0b1329] dark:text-white">
 
+    <!-- FIX 1: Tunnel-mode back button — hidden by default, shown via JS when ?targetTab=mgr-tab -->
+    <div id="tunnel-back-bar" class="hidden bg-white dark:bg-[#0b1329] border-b border-slate-200 dark:border-[#1c2541] px-4 py-2">
+        <a href="https://aquaculture-master-hub.vercel.app"
+           class="inline-flex items-center gap-1.5 text-xs font-black text-blue-600 dark:text-[#5bc0be] uppercase tracking-wider hover:underline">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.75-7.5"/></svg>
+            Back to Master Hub
+        </a>
+    </div>
+
     <header class="sticky top-0 z-40 border-b bg-white border-slate-200 dark:bg-[#0b1329] dark:border-[#1c2541] px-4 py-3 flex justify-between items-center shadow-sm">
         <div class="flex items-center gap-2">
             <i data-lucide="waves" class="text-blue-600 dark:text-[#5bc0be] w-6 h-6"></i>
             <div>
                 <h1 class="text-md font-black tracking-tight uppercase">Hatchery HR Pro</h1>
-                <p id="themeBadge" class="text-[10px] font-bold tracking-wider uppercase text-slate-400">Loading Mode...</p>
+                <p id="themeBadge" class="text-[10px] font-bold tracking-wider uppercase text-slate-400">Loading...</p>
             </div>
         </div>
         <div class="flex items-center gap-2 bg-slate-100 dark:bg-[#1c2541] px-3 py-1 rounded-full border border-slate-300 dark:border-[#3a506b]">
@@ -32,19 +42,20 @@
         <button onclick="switchTab('ot-tab')" id="ot-tab-btn" class="flex-1 min-w-[90px] py-3 text-center border-b-2 border-blue-600 text-blue-600 dark:text-[#5bc0be] dark:border-[#5bc0be] font-black">
             Log OT / Spawning
         </button>
-        <button onclick="switchTab('leave-tab')" id="leave-tab-btn" class="flex-1 min-w-[90px] py-3 text-center border-b-2 border-transparent text-slate-500 hover:text-slate-700 dark:hover:text-slate-300">
+        <button onclick="switchTab('leave-tab')" id="leave-tab-btn" class="flex-1 min-w-[90px] py-3 text-center border-b-2 border-transparent text-slate-500">
             Apply Leave
         </button>
-        <button onclick="switchTab('balance-tab')" id="balance-tab-btn" class="flex-1 min-w-[90px] py-3 text-center border-b-2 border-transparent text-slate-500 hover:text-slate-700 dark:hover:text-slate-300">
+        <button onclick="switchTab('balance-tab')" id="balance-tab-btn" class="flex-1 min-w-[90px] py-3 text-center border-b-2 border-transparent text-slate-500">
             My Balances
         </button>
-        <button onclick="switchTab('mgr-tab')" id="mgr-tab-btn" class="flex-1 min-w-[105px] py-3 text-center border-b-2 border-transparent text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 flex justify-center items-center gap-1">
+        <button onclick="switchTab('mgr-tab')" id="mgr-tab-btn" class="flex-1 min-w-[105px] py-3 text-center border-b-2 border-transparent text-slate-500 flex justify-center items-center gap-1">
             <i data-lucide="shield-check" class="w-3.5 h-3.5"></i> Manager
         </button>
     </nav>
 
     <main class="p-4 max-w-xl mx-auto pb-24">
 
+        <!-- ── LOG OT ──────────────────────────────────────── -->
         <div id="ot-tab" class="tab-content active space-y-4">
             <div class="bg-white dark:bg-[#1c2541] p-4 rounded-xl border-2 border-slate-200 dark:border-[#3a506b] shadow-sm">
                 <h2 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-3">Work Log Submission</h2>
@@ -53,18 +64,11 @@
                         <label class="block text-[10px] font-black uppercase tracking-wider mb-1 text-slate-500">Select Worker / Operator Name</label>
                         <select id="ot_name" required class="w-full p-3 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 dark:text-white font-bold outline-none">
                             <option value="" disabled selected>Choose Operator</option>
-                            <option value="James">James</option>
-                            <option value="Sham">Sham</option>
-                            <option value="Saali">Saali</option>
-                            <option value="John">John</option>
-                            <option value="Ridzwan">Ridzwan</option>
-                            <option value="Hasad">Hasad</option>
-                            <option value="Suhaire">Suhaire</option>
-                            <option value="Muhammad">Muhammad</option>
-                            <option value="Sabri">Sabri</option>
+                            <option>James</option><option>Sham</option><option>Saali</option>
+                            <option>John</option><option>Ridzwan</option><option>Hasad</option>
+                            <option>Suhaire</option><option>Muhammad</option><option>Sabri</option>
                         </select>
                     </div>
-
                     <div class="grid grid-cols-2 gap-3">
                         <div>
                             <label class="block text-[10px] font-black uppercase tracking-wider mb-1 text-slate-500">Day Designation</label>
@@ -82,7 +86,6 @@
                             </select>
                         </div>
                     </div>
-
                     <div id="wrapper_same_day" class="p-3 rounded-lg bg-slate-100 dark:bg-[#0b1329] border border-slate-200 dark:border-slate-700 grid grid-cols-2 gap-3">
                         <div>
                             <label class="block text-xs font-bold mb-1 text-slate-600 dark:text-slate-300">Work Date</label>
@@ -93,7 +96,6 @@
                             <input type="number" id="ot_hours_raw" step="0.5" placeholder="e.g. 3.5" class="w-full p-2 rounded bg-white dark:bg-slate-700 border dark:border-slate-600 font-semibold text-sm">
                         </div>
                     </div>
-
                     <div id="wrapper_overnight" class="hidden p-3 rounded-lg bg-slate-100 dark:bg-[#0b1329] border border-slate-200 dark:border-slate-700 grid grid-cols-2 gap-3">
                         <div>
                             <label class="block text-xs font-bold mb-1 text-slate-600 dark:text-slate-300">Start Timestamp</label>
@@ -104,7 +106,6 @@
                             <input type="datetime-local" id="ot_end" class="w-full p-2 rounded bg-white dark:bg-slate-700 border dark:border-slate-600 text-xs font-semibold">
                         </div>
                     </div>
-
                     <div class="p-4 rounded-xl border-2 border-dashed border-blue-400 dark:border-[#3a506b] bg-blue-50/50 dark:bg-[#1c2541]/50">
                         <label class="block text-[10px] font-black uppercase tracking-widest text-blue-600 dark:text-[#5bc0be] mb-2">Compensation Method</label>
                         <div class="grid grid-cols-2 gap-3">
@@ -124,14 +125,14 @@
                             </label>
                         </div>
                     </div>
-
-                    <button type="button" onclick="submitForm('OT')" class="w-full py-3.5 bg-blue-600 dark:bg-[#5bc0be] text-white dark:text-slate-900 font-black text-sm uppercase tracking-wider rounded-lg shadow hover:opacity-90 active:scale-98 transition flex justify-center items-center gap-2">
+                    <button type="button" onclick="submitForm('OT')" class="w-full py-3.5 bg-blue-600 dark:bg-[#5bc0be] text-white dark:text-slate-900 font-black text-sm uppercase tracking-wider rounded-lg shadow hover:opacity-90 transition flex justify-center items-center gap-2">
                         <i data-lucide="send" class="w-4 h-4"></i> Secure Submit to Records
                     </button>
                 </form>
             </div>
         </div>
 
+        <!-- ── APPLY LEAVE ────────────────────────────────── -->
         <div id="leave-tab" class="tab-content space-y-4">
             <div class="bg-white dark:bg-[#1c2541] p-4 rounded-xl border-2 border-slate-200 dark:border-[#3a506b] shadow-sm">
                 <h2 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-3">Leave Application Entry</h2>
@@ -140,22 +141,15 @@
                         <label class="block text-[10px] font-black uppercase tracking-wider mb-1 text-slate-500">Select Worker / Operator Name</label>
                         <select id="leave_name" required class="w-full p-3 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 dark:text-white font-bold outline-none">
                             <option value="" disabled selected>Choose Operator</option>
-                            <option value="James">James</option>
-                            <option value="Sham">Sham</option>
-                            <option value="Saali">Saali</option>
-                            <option value="John">John</option>
-                            <option value="Ridzwan">Ridzwan</option>
-                            <option value="Hasad">Hasad</option>
-                            <option value="Suhaire">Suhaire</option>
-                            <option value="Muhammad">Muhammad</option>
-                            <option value="Sabri">Sabri</option>
+                            <option>James</option><option>Sham</option><option>Saali</option>
+                            <option>John</option><option>Ridzwan</option><option>Hasad</option>
+                            <option>Suhaire</option><option>Muhammad</option><option>Sabri</option>
                         </select>
                     </div>
-
                     <div class="grid grid-cols-2 gap-3">
                         <div>
                             <label class="block text-[10px] font-black uppercase tracking-wider mb-1 text-slate-500">Leave Type</label>
-                            <select id="leave_type" class="w-full p-3 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none font-bold">
+                            <select id="leave_type" class="w-full p-3 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 dark:text-white outline-none font-bold">
                                 <option value="Annual Leave">Annual Leave</option>
                                 <option value="Extra Holiday Used">Extra Holiday Deduction</option>
                                 <option value="Medical Leave">Medical Leave</option>
@@ -168,47 +162,37 @@
                             <input type="date" id="leave_start" required class="w-full p-3 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 dark:text-white font-semibold text-sm">
                         </div>
                     </div>
-
                     <div>
                         <label class="block text-[10px] font-black uppercase tracking-wider mb-1 text-slate-500">Duration (Days Requested)</label>
                         <input type="number" id="leave_days" min="0.5" step="0.5" placeholder="e.g., 1 or 1.5" required class="w-full p-3 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 dark:text-white font-bold outline-none">
                     </div>
-
                     <div>
                         <label class="block text-[10px] font-black uppercase tracking-wider mb-1 text-slate-500">Operational Reason / Memo</label>
-                        <textarea id="leave_reason" rows="3" required placeholder="Provide clear reason details..." class="w-full p-3 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none font-medium text-sm"></textarea>
+                        <textarea id="leave_reason" rows="3" required placeholder="Provide clear reason details..." class="w-full p-3 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 dark:text-white outline-none font-medium text-sm"></textarea>
                     </div>
-
-                    <button type="button" onclick="submitForm('Leave')" class="w-full py-3.5 bg-blue-600 dark:bg-[#5bc0be] text-white dark:text-slate-900 font-black text-sm uppercase tracking-wider rounded-lg shadow hover:opacity-90 active:scale-98 transition flex justify-center items-center gap-2">
+                    <button type="button" onclick="submitForm('Leave')" class="w-full py-3.5 bg-blue-600 dark:bg-[#5bc0be] text-white dark:text-slate-900 font-black text-sm uppercase tracking-wider rounded-lg shadow hover:opacity-90 transition flex justify-center items-center gap-2">
                         <i data-lucide="calendar-plus" class="w-4 h-4"></i> Log Leave Request
                     </button>
                 </form>
             </div>
         </div>
 
+        <!-- ── MY BALANCES ────────────────────────────────── -->
         <div id="balance-tab" class="tab-content space-y-4">
             <div class="bg-white dark:bg-[#1c2541] p-4 rounded-xl border-2 border-slate-200 dark:border-[#3a506b] shadow-sm">
                 <h2 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-1">Worker Ledger Lookup</h2>
-                <p class="text-xs text-slate-500 mb-4">Select your name from the dashboard terminal layout below to load your balances.</p>
-                
+                <p class="text-xs text-slate-500 mb-4">Select your name to load your current leave balances.</p>
                 <div class="space-y-4">
                     <div>
                         <label class="block text-[10px] font-black uppercase tracking-wider mb-1 text-slate-500">Select Roster Profile</label>
-                        <select id="balance_worker_search" onchange="triggerBalanceLookup()" class="w-full p-3 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 dark:text-white font-bold tracking-wide outline-none">
+                        <select id="balance_worker_search" onchange="triggerBalanceLookup()" class="w-full p-3 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 dark:text-white font-bold outline-none">
                             <option value="">-- Choose Name --</option>
-                            <option value="James">James</option>
-                            <option value="Sham">Sham</option>
-                            <option value="Saali">Saali</option>
-                            <option value="John">John</option>
-                            <option value="Ridzwan">Ridzwan</option>
-                            <option value="Hasad">Hasad</option>
-                            <option value="Suhaire">Suhaire</option>
-                            <option value="Muhammad">Muhammad</option>
-                            <option value="Sabri">Sabri</option>
+                            <option>James</option><option>Sham</option><option>Saali</option>
+                            <option>John</option><option>Ridzwan</option><option>Hasad</option>
+                            <option>Suhaire</option><option>Muhammad</option><option>Sabri</option>
                         </select>
                     </div>
-
-                    <div id="balance_display_container" class="grid grid-cols-3 gap-2 pt-2">
+                    <div class="grid grid-cols-3 gap-2 pt-2">
                         <div class="bg-slate-100 dark:bg-[#0b1329] p-3 rounded-xl border dark:border-slate-800 text-center">
                             <p class="text-[9px] font-black uppercase text-slate-400 tracking-wider">Annual Leave</p>
                             <p id="lbl_annual_bal" class="text-lg font-black text-slate-700 dark:text-slate-200">0.0</p>
@@ -220,7 +204,7 @@
                             <span class="text-[9px] text-slate-400 block font-medium">Earned Balance</span>
                         </div>
                         <div class="bg-slate-100 dark:bg-[#0b1329] p-3 rounded-xl border dark:border-slate-800 text-center">
-                            <p class="text-[9px] font-black uppercase text-slate-400 tracking-wider">Total Leave Used</p>
+                            <p class="text-[9px] font-black uppercase text-slate-400 tracking-wider">Total Used</p>
                             <p id="lbl_medical_bal" class="text-lg font-black text-slate-700 dark:text-slate-200">0.0</p>
                             <span class="text-[9px] text-slate-400 block font-medium">Days Taken</span>
                         </div>
@@ -229,15 +213,16 @@
             </div>
         </div>
 
+        <!-- ── MANAGER ────────────────────────────────────── -->
         <div id="mgr-tab" class="tab-content space-y-4">
             <div id="gatekeeper_panel" class="text-center p-8 bg-white dark:bg-[#1c2541] border-2 border-slate-200 dark:border-[#3a506b] rounded-xl max-w-sm mx-auto space-y-4 shadow-sm">
                 <i data-lucide="lock" class="w-8 h-8 text-amber-500 mx-auto animate-pulse"></i>
                 <div>
-                    <h3 class="text-md font-black uppercase tracking-wide">Identity Terminal Credentials</h3>
-                    <p class="text-xs text-slate-400">Enter secure operational management pin</p>
+                    <h3 class="text-md font-black uppercase tracking-wide">Manager Credentials</h3>
+                    <p class="text-xs text-slate-400">Enter secure management PIN</p>
                 </div>
                 <input type="password" id="mgr_pin" placeholder="••••" class="w-full p-3 text-center text-xl tracking-widest rounded-lg border dark:border-slate-700 dark:bg-slate-800 dark:text-white font-black">
-                <button type="button" onclick="unlockDashboard()" class="w-full py-2.5 bg-slate-900 dark:bg-blue-600 text-white font-black rounded-lg uppercase tracking-wider text-xs">Authenticate Console</button>
+                <button type="button" onclick="unlockDashboard()" class="w-full py-2.5 bg-slate-900 dark:bg-blue-600 text-white font-black rounded-lg uppercase tracking-wider text-xs">Authenticate</button>
             </div>
 
             <div id="dashboard_panel" class="hidden space-y-6">
@@ -251,109 +236,106 @@
                     </button>
                 </div>
 
+                <!-- Balance table -->
                 <div class="space-y-2">
                     <h3 class="text-xs font-black uppercase tracking-wider text-blue-500">Active Leave Registry Balances</h3>
                     <div class="overflow-x-auto rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#1c2541] shadow-sm">
                         <table class="w-full text-left border-collapse text-xs">
                             <thead>
                                 <tr class="bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 font-black uppercase text-[10px] border-b dark:border-slate-700">
-                                    <th class="p-3">Operator Name</th>
+                                    <th class="p-3">Operator</th>
                                     <th class="p-3">Annual (Left)</th>
                                     <th class="p-3">Extra Holiday</th>
-                                    <th class="p-3">Total Leave Used</th>
+                                    <th class="p-3">Total Used</th>
                                 </tr>
                             </thead>
                             <tbody id="table_balance_body" class="divide-y divide-slate-100 dark:divide-slate-800 font-medium dark:text-slate-300">
-                                <tr><td colspan="4" class="p-4 text-center text-slate-400 italic">Awaiting database connection sync...</td></tr>
+                                <tr><td colspan="4" class="p-4 text-center text-slate-400 italic">Awaiting sync...</td></tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
 
+                <!-- OT calculator -->
                 <div class="space-y-4">
                     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 bg-white dark:bg-[#1c2541] p-4 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm">
                         <div>
                             <h4 class="text-xs font-black uppercase tracking-wider text-slate-400">OT Calendar Cycle Window</h4>
-                            <p class="text-[11px] text-slate-500">Select target month to execute payroll totals</p>
+                            <p class="text-[11px] text-slate-500">Select target month to calculate payroll totals</p>
                         </div>
-                        <div>
-                            <select id="hr-calculator-month" onchange="calculateMonthlyMetrics()" class="bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg p-2 text-xs font-black focus:outline-none focus:border-indigo-500 text-slate-800 dark:text-white">
-                                <option value="2026-06" selected>June 2026</option>
-                                <option value="2026-05">May 2026</option>
-                                <option value="2026-04">April 2026</option>
-                                <option value="2026-03">March 2026</option>
-                                <option value="2026-02">February 2026</option>
-                                <option value="2026-01">January 2026</option>
-                            </select>
-                        </div>
+                        <!-- FIX 3: month options now generated dynamically — won't go stale -->
+                        <select id="hr-calculator-month" onchange="calculateMonthlyMetrics()" class="bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg p-2 text-xs font-black focus:outline-none text-slate-800 dark:text-white">
+                        </select>
                     </div>
 
                     <div class="grid grid-cols-2 gap-3">
                         <div class="bg-gradient-to-br from-blue-600 to-indigo-700 text-white p-4 rounded-xl shadow-sm">
-                            <p class="text-[9px] font-black uppercase tracking-widest opacity-70">Total Calculated OT</p>
+                            <p class="text-[9px] font-black uppercase tracking-widest opacity-70">Total OT Hours</p>
                             <h3 id="calc-total-ot-hours" class="text-2xl font-black mt-0.5">0.0 Hours</h3>
                         </div>
                         <div class="bg-white dark:bg-[#1c2541] border border-slate-200 dark:border-slate-700 p-4 rounded-xl shadow-sm">
-                            <p class="text-[9px] font-black uppercase tracking-widest text-slate-400">Activity Frequency</p>
+                            <p class="text-[9px] font-black uppercase tracking-widest text-slate-400">Shift Count</p>
                             <h3 id="calc-total-ot-shifts" class="text-2xl font-black text-slate-800 dark:text-white mt-0.5">0 Shifts</h3>
                         </div>
                     </div>
 
                     <div class="space-y-2">
-                        <h3 class="text-xs font-black uppercase tracking-wider text-slate-400">Overtime Log Window Entries</h3>
+                        <h3 class="text-xs font-black uppercase tracking-wider text-slate-400">Overtime Log Entries</h3>
                         <div class="overflow-x-auto rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#1c2541] shadow-sm">
                             <table class="w-full text-left border-collapse text-xs">
                                 <thead class="bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 font-black uppercase text-[10px] border-b dark:border-slate-700">
                                     <tr>
-                                        <th class="p-3">Date Logged</th>
+                                        <th class="p-3">Date</th>
                                         <th class="p-3">Operator</th>
                                         <th class="p-3">Hours</th>
                                         <th class="p-3">Type</th>
-                                        <th class="p-3">Payout Logic</th>
+                                        <th class="p-3">Payout</th>
                                     </tr>
                                 </thead>
                                 <tbody id="calc-ot-table-rows" class="divide-y divide-slate-100 dark:divide-slate-800 font-medium dark:text-slate-300">
-                                    <tr><td colspan="5" class="p-4 text-center text-slate-400 italic">No historical logs parsed.</td></tr>
+                                    <tr><td colspan="5" class="p-4 text-center text-slate-400 italic">No logs parsed.</td></tr>
                                 </tbody>
                             </table>
                         </div>
                     </div>
                 </div>
 
+                <!-- Leave log -->
                 <div class="space-y-2">
-                    <h3 class="text-xs font-black uppercase tracking-wider text-slate-400">Absence & Leave Application Log</h3>
+                    <h3 class="text-xs font-black uppercase tracking-wider text-slate-400">Leave Application Log</h3>
                     <div class="overflow-x-auto rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#1c2541] shadow-sm">
                         <table class="w-full text-left border-collapse text-xs">
                             <thead>
                                 <tr class="bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 font-black uppercase text-[10px] border-b dark:border-slate-700">
                                     <th class="p-3">Operator</th>
-                                    <th class="p-3">Leave Category</th>
+                                    <th class="p-3">Leave Type</th>
                                     <th class="p-3">Duration</th>
-                                    <th class="p-3">Reason / Memo</th>
+                                    <th class="p-3">Reason</th>
                                 </tr>
                             </thead>
                             <tbody id="table_leave_body" class="divide-y divide-slate-100 dark:divide-slate-800 font-medium dark:text-slate-300">
-                                <tr><td colspan="4" class="p-4 text-center text-slate-400 italic">Awaiting database connection sync...</td></tr>
+                                <tr><td colspan="4" class="p-4 text-center text-slate-400 italic">Awaiting sync...</td></tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
         </div>
+
     </main>
 
     <script>
-        // Single, verified configuration setup
-        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzwfA76ByGNnK0XtFpeqYCzZ54W1Lulz5tfqpahuzTLihJuryywejlC1SiKEg87Pl2PZw/exec"; 
-        const CACHE_KEY = "hatchery_hr_v4_cache";
-        const MASTER_PIN = "3653";
+        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzwfA76ByGNnK0XtFpeqYCzZ54W1Lulz5tfqpahuzTLihJuryywejlC1SiKEg87Pl2PZw/exec";
+        const CACHE_KEY   = "hatchery_hr_v4_cache";
+        const MASTER_PIN  = "3653";
         let liveBalancesData = [];
-        let globalRawOtLogs = [];
+        let globalRawOtLogs  = [];
 
+        // ── Theme ─────────────────────────────────────────────
         function calculateThemeScope() {
-            const currentHour = new Date().getHours();
+            const h = new Date().getHours();
             const badge = document.getElementById("themeBadge");
-            const isNight = (currentHour >= 18 || currentHour < 6);
+            const isNight = (h >= 18 || h < 6);
             if (isNight) {
                 document.documentElement.classList.add('dark');
                 badge.innerText = "Night Shift Operations Mode";
@@ -365,247 +347,241 @@
             }
         }
 
-        function switchTab(targetTabId) {
+        // ── Tab switching ─────────────────────────────────────
+        function switchTab(id) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-            document.getElementById(targetTabId).classList.add('active');
-            const tabButtonMap = ['ot-tab', 'leave-tab', 'balance-tab', 'mgr-tab'];
-            tabButtonMap.forEach(t => {
-                const button = document.getElementById(t + '-btn');
-                if (t === targetTabId) {
-                    button.className = "flex-1 min-w-[90px] py-3 text-center border-b-2 border-blue-600 text-blue-600 dark:text-[#5bc0be] dark:border-[#5bc0be] font-black";
-                } else {
-                    button.className = "flex-1 min-w-[90px] py-3 text-center border-b-2 border-transparent text-slate-500 font-semibold";
-                }
+            document.getElementById(id).classList.add('active');
+            ['ot-tab','leave-tab','balance-tab','mgr-tab'].forEach(t => {
+                const btn = document.getElementById(t + '-btn');
+                btn.className = t === id
+                    ? "flex-1 min-w-[90px] py-3 text-center border-b-2 border-blue-600 text-blue-600 dark:text-[#5bc0be] dark:border-[#5bc0be] font-black flex justify-center items-center gap-1"
+                    : "flex-1 min-w-[90px] py-3 text-center border-b-2 border-transparent text-slate-500 font-semibold flex justify-center items-center gap-1";
             });
         }
 
-        function toggleOTFields() {
-            const shiftType = document.getElementById("ot_shift_type").value;
-            if (shiftType === "Same Day") {
-                document.getElementById("wrapper_same_day").classList.remove("hidden");
-                document.getElementById("wrapper_overnight").classList.add("hidden");
-            } else {
-                document.getElementById("wrapper_same_day").classList.add("hidden");
-                document.getElementById("wrapper_overnight").classList.remove("hidden");
+        // ── Month selector ─────────────────────────────────────
+        // FIX 3: generate options dynamically so they never go stale
+        function populateMonthSelector(preselectVal) {
+            const sel = document.getElementById('hr-calculator-month');
+            const now = new Date();
+            sel.innerHTML = '';
+            for (let i = -1; i <= 12; i++) {
+                const d     = new Date(now.getFullYear(), now.getMonth() - i, 1);
+                const val   = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+                const label = d.toLocaleDateString('en-US', { month:'long', year:'numeric' });
+                const opt   = document.createElement('option');
+                opt.value       = val;
+                opt.textContent = label;
+                sel.appendChild(opt);
             }
+            // Pre-select: use URL param if provided, else current month
+            const target = preselectVal || `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+            if ([...sel.options].some(o => o.value === target)) sel.value = target;
         }
 
+        // ── OT toggle ─────────────────────────────────────────
+        function toggleOTFields() {
+            const t = document.getElementById("ot_shift_type").value;
+            document.getElementById("wrapper_same_day").classList.toggle("hidden", t !== "Same Day");
+            document.getElementById("wrapper_overnight").classList.toggle("hidden", t === "Same Day");
+        }
+
+        // ── Manager unlock ────────────────────────────────────
         function unlockDashboard() {
             if (document.getElementById("mgr_pin").value === MASTER_PIN) {
-                sessionStorage.setItem('mgr_auth', '1');
-                document.getElementById("gatekeeper_panel").classList.add("hidden");
-                document.getElementById("dashboard_panel").classList.remove("hidden");
-                fetchSheetData();
+                sessionStorage.setItem('mgr_auth','1');
+                showManagerDashboard();
             } else {
-                alert("Access Denied. Secret pin invalid.");
+                alert("Access Denied. Invalid PIN.");
             }
         }
 
+        function showManagerDashboard() {
+            document.getElementById("gatekeeper_panel").classList.add("hidden");
+            document.getElementById("dashboard_panel").classList.remove("hidden");
+            fetchSheetData();
+        }
+
+        // ── Form cache ────────────────────────────────────────
         function saveFormCache() {
-            const dataset = {
-                otName: document.getElementById("ot_name").value,
-                otDayType: document.getElementById("ot_day_type").value,
-                otShiftType: document.getElementById("ot_shift_type").value,
+            const d = {
+                otName:       document.getElementById("ot_name").value,
+                otDayType:    document.getElementById("ot_day_type").value,
+                otShiftType:  document.getElementById("ot_shift_type").value,
                 otDateSingle: document.getElementById("ot_date_single").value,
-                otHoursRaw: document.getElementById("ot_hours_raw").value,
-                otStart: document.getElementById("ot_start").value,
-                otEnd: document.getElementById("ot_end").value,
-                otComp: document.querySelector('input[name="ot_comp_rule"]:checked')?.value || "Standard Pay",
-                lName: document.getElementById("leave_name").value,
-                lType: document.getElementById("leave_type").value,
-                lStart: document.getElementById("leave_start").value,
-                lDays: document.getElementById("leave_days").value,
-                lReason: document.getElementById("leave_reason").value,
+                otHoursRaw:   document.getElementById("ot_hours_raw").value,
+                otStart:      document.getElementById("ot_start").value,
+                otEnd:        document.getElementById("ot_end").value,
+                otComp:       document.querySelector('input[name="ot_comp_rule"]:checked')?.value || "Standard Pay",
+                lName:        document.getElementById("leave_name").value,
+                lType:        document.getElementById("leave_type").value,
+                lStart:       document.getElementById("leave_start").value,
+                lDays:        document.getElementById("leave_days").value,
+                lReason:      document.getElementById("leave_reason").value,
                 workerSearch: document.getElementById("balance_worker_search").value
             };
-            localStorage.setItem(CACHE_KEY, JSON.stringify(dataset));
+            localStorage.setItem(CACHE_KEY, JSON.stringify(d));
         }
 
         function loadFormCache() {
-            const cachedString = localStorage.getItem(CACHE_KEY);
-            if (!cachedString) return;
-            const item = JSON.parse(cachedString);
-            document.getElementById("ot_name").value = item.otName || "";
-            document.getElementById("ot_day_type").value = item.otDayType || "Normal";
-            document.getElementById("ot_shift_type").value = item.otShiftType || "Same Day";
-            document.getElementById("ot_date_single").value = item.otDateSingle || "";
-            document.getElementById("ot_hours_raw").value = item.otHoursRaw || "";
-            document.getElementById("ot_start").value = item.otStart || "";
-            document.getElementById("ot_end").value = item.otEnd || "";
-            document.getElementById("leave_name").value = item.lName || "";
-            document.getElementById("leave_type").value = item.lType || "Annual Leave";
-            document.getElementById("leave_start").value = item.lStart || "";
-            document.getElementById("leave_days").value = item.lDays || "";
-            document.getElementById("leave_reason").value = item.lReason || "";
-            document.getElementById("balance_worker_search").value = item.workerSearch || "";
-            if (item.otComp) {
-                const rBtn = document.querySelector(`input[name="ot_comp_rule"][value="${item.otComp}"]`);
-                if (rBtn) rBtn.checked = true;
+            const s = localStorage.getItem(CACHE_KEY);
+            if (!s) return;
+            const c = JSON.parse(s);
+            document.getElementById("ot_name").value          = c.otName || "";
+            document.getElementById("ot_day_type").value      = c.otDayType || "Normal";
+            document.getElementById("ot_shift_type").value    = c.otShiftType || "Same Day";
+            document.getElementById("ot_date_single").value   = c.otDateSingle || "";
+            document.getElementById("ot_hours_raw").value     = c.otHoursRaw || "";
+            document.getElementById("ot_start").value         = c.otStart || "";
+            document.getElementById("ot_end").value           = c.otEnd || "";
+            document.getElementById("leave_name").value       = c.lName || "";
+            document.getElementById("leave_type").value       = c.lType || "Annual Leave";
+            document.getElementById("leave_start").value      = c.lStart || "";
+            document.getElementById("leave_days").value       = c.lDays || "";
+            document.getElementById("leave_reason").value     = c.lReason || "";
+            document.getElementById("balance_worker_search").value = c.workerSearch || "";
+            if (c.otComp) {
+                const rb = document.querySelector(`input[name="ot_comp_rule"][value="${c.otComp}"]`);
+                if (rb) rb.checked = true;
             }
             toggleOTFields();
         }
 
+        // ── Submit ────────────────────────────────────────────
         async function submitForm(type) {
-            let payload = { formType: type };
+            let p = { formType: type };
             if (type === "OT") {
-                payload.employeeName = document.getElementById("ot_name").value;
-                payload.dayType = document.getElementById("ot_day_type").value;
-                payload.shiftType = document.getElementById("ot_shift_type").value;
-                payload.dateSingle = document.getElementById("ot_date_single").value;
-                payload.rawHours = document.getElementById("ot_hours_raw").value;
-                payload.startTime = document.getElementById("ot_start").value;
-                payload.endTime = document.getElementById("ot_end").value;
-                payload.compensationRule = document.querySelector('input[name="ot_comp_rule"]:checked').value;
-                if (!payload.employeeName) { alert("Please select your operator name."); return; }
+                p.employeeName     = document.getElementById("ot_name").value;
+                p.dayType          = document.getElementById("ot_day_type").value;
+                p.shiftType        = document.getElementById("ot_shift_type").value;
+                p.dateSingle       = document.getElementById("ot_date_single").value;
+                p.rawHours         = document.getElementById("ot_hours_raw").value;
+                p.startTime        = document.getElementById("ot_start").value;
+                p.endTime          = document.getElementById("ot_end").value;
+                p.compensationRule = document.querySelector('input[name="ot_comp_rule"]:checked').value;
+                if (!p.employeeName) { alert("Please select an operator name."); return; }
             } else {
-                payload.employeeName = document.getElementById("leave_name").value;
-                payload.leaveType = document.getElementById("leave_type").value;
-                payload.startDate = document.getElementById("leave_start").value;
-                payload.durationDays = document.getElementById("leave_days").value;
-                payload.reason = document.getElementById("leave_reason").value.trim();
-                if (!payload.employeeName || !payload.startDate || !payload.durationDays) { alert("Please fill out all leave fields."); return; }
+                p.employeeName = document.getElementById("leave_name").value;
+                p.leaveType    = document.getElementById("leave_type").value;
+                p.startDate    = document.getElementById("leave_start").value;
+                p.durationDays = document.getElementById("leave_days").value;
+                p.reason       = document.getElementById("leave_reason").value.trim();
+                if (!p.employeeName || !p.startDate || !p.durationDays) { alert("Please fill all leave fields."); return; }
             }
-
             try {
-                await fetch(WEB_APP_URL, {
-                    method: "POST",
-                    mode: "no-cors",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(payload)
-                });
-                alert("Log submitted successfully to Spreadsheet data grid!");
+                await fetch(WEB_APP_URL, { method:"POST", mode:"no-cors", headers:{"Content-Type":"application/json"}, body:JSON.stringify(p) });
+                alert("Submitted successfully!");
                 document.getElementById(type === "OT" ? "otForm" : "leaveForm").reset();
-                saveFormCache();
-                toggleOTFields();
-                fetchSheetData();
-            } catch (err) {
-                alert("Connection pipeline timeout execution error.");
-            }
+                saveFormCache(); toggleOTFields(); fetchSheetData();
+            } catch(e) { alert("Connection error. Please try again."); }
         }
 
+        // ── Fetch sheet data ──────────────────────────────────
         async function fetchSheetData() {
             try {
-                const response = await fetch(WEB_APP_URL);
-                const dataset = await response.json();
-                liveBalancesData = dataset.balances || [];
-                globalRawOtLogs = dataset.ot || [];
+                const resp = await fetch(WEB_APP_URL);
+                const data = await resp.json();
+                liveBalancesData = data.balances || [];
+                globalRawOtLogs  = data.ot       || [];
 
-                document.getElementById("table_balance_body").innerHTML = liveBalancesData.length ? liveBalancesData.map(row => `
-                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50">
-                        <td class="p-3 font-bold text-slate-800 dark:text-slate-200">${row.name}</td>
-                        <td class="p-3 font-semibold text-blue-600 dark:text-blue-400">${parseFloat(row.annualLeaveLeft).toFixed(1)} Days</td>
-                        <td class="p-3 font-semibold text-emerald-600 dark:text-emerald-400">${parseFloat(row.extraHolidayEarned).toFixed(1)} Days</td>
-                        <td class="p-3 text-slate-500">${parseFloat(row.medicalLeaveLeft).toFixed(1)} Days</td>
-                    </tr>
-                `).join('') : `<tr><td colspan="4" class="p-4 text-center">Empty balances records.</td></tr>`;
+                document.getElementById("table_balance_body").innerHTML = liveBalancesData.length
+                    ? liveBalancesData.map(r => `
+                        <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50">
+                            <td class="p-3 font-bold">${r.name}</td>
+                            <td class="p-3 font-semibold text-blue-600 dark:text-blue-400">${parseFloat(r.annualLeaveLeft).toFixed(1)} Days</td>
+                            <td class="p-3 font-semibold text-emerald-600 dark:text-emerald-400">${parseFloat(r.extraHolidayEarned).toFixed(1)} Days</td>
+                            <td class="p-3 text-slate-500">${parseFloat(r.medicalLeaveLeft).toFixed(1)} Days</td>
+                        </tr>`).join('')
+                    : `<tr><td colspan="4" class="p-4 text-center text-slate-400">No balance records.</td></tr>`;
 
-                document.getElementById("table_leave_body").innerHTML = dataset.leave && dataset.leave.length ? dataset.leave.map(row => `
-                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50">
-                        <td class="p-3 font-semibold">${row.name || ''}</td>
-                        <td class="p-3"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300">${row.type || ''}</span></td>
-                        <td class="p-3 font-black">${row.days || ''} Day(s)</td>
-                        <td class="p-3 text-slate-400 truncate max-w-[120px] text-[11px]" title="${row.reason || ''}">${row.reason || ''}</td>
-                    </tr>
-                `).join('') : `<tr><td colspan="4" class="p-4 text-center">No absences logged.</td></tr>`;
+                document.getElementById("table_leave_body").innerHTML = data.leave?.length
+                    ? data.leave.map(r => `
+                        <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50">
+                            <td class="p-3 font-semibold">${r.name||''}</td>
+                            <td class="p-3"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300">${r.type||''}</span></td>
+                            <td class="p-3 font-black">${r.days||''} Day(s)</td>
+                            <td class="p-3 text-slate-400 truncate max-w-[120px] text-[11px]" title="${r.reason||''}">${r.reason||''}</td>
+                        </tr>`).join('')
+                    : `<tr><td colspan="4" class="p-4 text-center text-slate-400">No absences logged.</td></tr>`;
 
                 calculateMonthlyMetrics();
                 triggerBalanceLookup();
-            } catch (err) { console.error("Data error registry pull:", err); }
+            } catch(e) { console.error("Sheet fetch error:", e); }
         }
 
+        // ── Monthly metrics ───────────────────────────────────
         function calculateMonthlyMetrics() {
-            const selectedMonth = document.getElementById('hr-calculator-month').value;
-            const tableBody = document.getElementById('calc-ot-table-rows');
-            
-            let totalHours = 0;
-            let shiftCount = 0;
-            let tableHtml = "";
+            const month = document.getElementById('hr-calculator-month').value;
+            let totalHours = 0, shiftCount = 0, html = "";
 
             globalRawOtLogs.forEach(entry => {
                 if (!entry.date) return;
-                
-                const entryDate = new Date(entry.date);
-                if (isNaN(entryDate.getTime())) return; 
-                
-                const year = entryDate.getFullYear();
-                const month = String(entryDate.getMonth() + 1).padStart(2, '0');
-                const entryMonthStr = `${year}-${month}`;
-
-                if (entryMonthStr === selectedMonth) {
-                    const displayDate = entryDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute:'2-digit' });
-                    const hoursVal = parseFloat(entry.hours) || 0;
-                    
-                    totalHours += hoursVal;
-                    shiftCount++;
-
-                    tableHtml += `
-                        <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
-                            <td class="p-3 font-semibold text-slate-500">${displayDate}</td>
-                            <td class="p-3 font-black text-slate-800 dark:text-white uppercase tracking-wide">${entry.name}</td>
-                            <td class="p-3 font-black text-indigo-600 dark:text-indigo-400">${hoursVal.toFixed(1)} h</td>
-                            <td class="p-3"><span class="px-2 py-0.5 rounded text-[10px] font-black bg-slate-100 dark:bg-slate-800 uppercase text-slate-400">${entry.dayType}</span></td>
-                            <td class="p-3"><span class="px-2 py-0.5 rounded text-[10px] font-bold ${entry.compRule === 'Extra Holiday' ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300' : 'bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-300'}">${entry.compRule || 'Standard Pay'}</span></td>
-                        </tr>
-                    `;
-                }
+                const d = new Date(entry.date);
+                if (isNaN(d.getTime())) return;
+                const em = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+                if (em !== month) return;
+                const h = parseFloat(entry.hours) || 0;
+                totalHours += h; shiftCount++;
+                html += `
+                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50">
+                        <td class="p-3 text-slate-500">${d.toLocaleDateString('en-US',{month:'short',day:'numeric'})}</td>
+                        <td class="p-3 font-black uppercase tracking-wide">${entry.name}</td>
+                        <td class="p-3 font-black text-indigo-600 dark:text-indigo-400">${h.toFixed(1)} h</td>
+                        <td class="p-3"><span class="px-2 py-0.5 rounded text-[10px] font-black bg-slate-100 dark:bg-slate-800 uppercase text-slate-400">${entry.dayType}</span></td>
+                        <td class="p-3"><span class="px-2 py-0.5 rounded text-[10px] font-bold ${entry.compRule==='Extra Holiday'?'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300':'bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-300'}">${entry.compRule||'Standard Pay'}</span></td>
+                    </tr>`;
             });
 
             document.getElementById('calc-total-ot-hours').textContent = `${totalHours.toFixed(1)} Hours`;
-            document.getElementById('calc-total-ot-shifts').textContent = `${shiftCount} ${shiftCount === 1 ? 'Shift' : 'Shifts'}`;
-            
-            if (shiftCount === 0) {
-                tableBody.innerHTML = `
-                    <tr>
-                        <td colspan="5" class="p-6 text-center font-bold tracking-wide text-slate-400 uppercase bg-slate-50/50 dark:bg-slate-800/10">
-                            No shift records inside this filter window.
-                        </td>
-                    </tr>
-                `;
-            } else {
-                tableBody.innerHTML = tableHtml;
-            }
+            document.getElementById('calc-total-ot-shifts').textContent = `${shiftCount} ${shiftCount===1?'Shift':'Shifts'}`;
+            document.getElementById('calc-ot-table-rows').innerHTML = shiftCount
+                ? html
+                : `<tr><td colspan="5" class="p-6 text-center font-bold text-slate-400 uppercase tracking-wide bg-slate-50/50 dark:bg-slate-800/10">No records for this month.</td></tr>`;
         }
 
+        // ── Balance lookup ────────────────────────────────────
         function triggerBalanceLookup() {
-            const query = document.getElementById("balance_worker_search").value;
-            const lAnn = document.getElementById("lbl_annual_bal");
-            const lExt = document.getElementById("lbl_extra_bal");
-            const lMed = document.getElementById("lbl_medical_bal");
-            if (!query) { lAnn.innerText = "0.0"; lExt.innerText = "0.0"; lMed.innerText = "0.0"; return; }
-            const match = liveBalancesData.find(b => b.name.toLowerCase() === query.toLowerCase());
+            const q  = document.getElementById("balance_worker_search").value;
+            const a  = document.getElementById("lbl_annual_bal");
+            const ex = document.getElementById("lbl_extra_bal");
+            const m  = document.getElementById("lbl_medical_bal");
+            if (!q) { a.innerText="0.0"; ex.innerText="0.0"; m.innerText="0.0"; return; }
+            const match = liveBalancesData.find(b => b.name.toLowerCase()===q.toLowerCase());
             if (match) {
-                lAnn.innerText = parseFloat(match.annualLeaveLeft).toFixed(1);
-                lExt.innerText = parseFloat(match.extraHolidayEarned).toFixed(1);
-                lMed.innerText = parseFloat(match.medicalLeaveLeft).toFixed(1);
-            } else {
-                lAnn.innerText = "0.0"; lExt.innerText = "0.0"; lMed.innerText = "0.0";
-            }
+                a.innerText  = parseFloat(match.annualLeaveLeft).toFixed(1);
+                ex.innerText = parseFloat(match.extraHolidayEarned).toFixed(1);
+                m.innerText  = parseFloat(match.medicalLeaveLeft).toFixed(1);
+            } else { a.innerText="0.0"; ex.innerText="0.0"; m.innerText="0.0"; }
             saveFormCache();
         }
 
+        // ── Boot ──────────────────────────────────────────────
         window.addEventListener("DOMContentLoaded", () => {
             calculateThemeScope();
             loadFormCache();
             lucide.createIcons();
 
-            const urlParams = new URLSearchParams(window.location.search);
-            const targetTab = urlParams.get('targetTab');
-            const pinBypass = urlParams.get('pin');
+            const params     = new URLSearchParams(window.location.search);
+            const targetTab  = params.get('targetTab');
+            const pinBypass  = params.get('pin');
+            const monthParam = params.get('month');   // FIX 3: read month from URL
             const sessionAuth = sessionStorage.getItem('mgr_auth');
 
-            // AUTOMATIC BYPASS CONTROLLER
-            if (pinBypass === MASTER_PIN || pinBypass === "3653" || sessionAuth === '1') {
-                sessionStorage.setItem('mgr_auth', '1');
-                
-                const gatekeeper = document.getElementById("gatekeeper_panel");
-                const dashboard = document.getElementById("dashboard_panel");
-                if (gatekeeper) gatekeeper.classList.add("hidden");
-                if (dashboard) dashboard.classList.remove("hidden");
+            // FIX 3: Populate month dropdown, pre-select from URL if provided
+            populateMonthSelector(monthParam);
+
+            // FIX 1: Show back button if loaded via tunnel from master hub
+            if (targetTab === 'mgr-tab') {
+                document.getElementById('tunnel-back-bar').classList.remove('hidden');
             }
 
-            if (targetTab === 'mgr-tab') {
-                switchTab('mgr-tab');
+            // Auto-unlock manager dashboard if PIN matches or session active
+            if (pinBypass === MASTER_PIN || sessionAuth === '1') {
+                sessionStorage.setItem('mgr_auth', '1');
+                showManagerDashboard();
             }
+
+            if (targetTab) switchTab(targetTab);
 
             fetchSheetData();
 
