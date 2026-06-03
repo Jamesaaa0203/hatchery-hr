@@ -14,7 +14,6 @@
 </head>
 <body class="bg-slate-50 text-slate-900 font-sans min-h-screen dark:bg-[#0b1329] dark:text-white">
 
-    <!-- HEADER SYSTEM -->
     <header class="sticky top-0 z-40 border-b bg-white border-slate-200 dark:bg-[#0b1329] dark:border-[#1c2541] px-4 py-3 flex justify-between items-center shadow-sm">
         <div class="flex items-center gap-2">
             <i data-lucide="waves" class="text-blue-600 dark:text-[#5bc0be] w-6 h-6"></i>
@@ -29,9 +28,8 @@
         </div>
     </header>
 
-    <!-- NAVIGATION TABS -->
     <nav class="flex sticky top-[53px] z-30 bg-white dark:bg-[#0b1329] border-b border-slate-200 dark:border-[#1c2541] text-xs font-black uppercase tracking-wider overflow-x-auto">
-        <button onclick="switchTab('ot-tab')" id="ot-tab-btn" class="flex-1 min-w-[90px] py-3 text-center border-b-2 border-blue-600 text-blue-600 dark:text-[#5bc0be] dark:border-[#5bc0be]">
+        <button onclick="switchTab('ot-tab')" id="ot-tab-btn" class="flex-1 min-w-[90px] py-3 text-center border-b-2 border-blue-600 text-blue-600 dark:text-[#5bc0be] dark:border-[#5bc0be] font-black">
             Log OT / Spawning
         </button>
         <button onclick="switchTab('leave-tab')" id="leave-tab-btn" class="flex-1 min-w-[90px] py-3 text-center border-b-2 border-transparent text-slate-500 hover:text-slate-700 dark:hover:text-slate-300">
@@ -45,10 +43,8 @@
         </button>
     </nav>
 
-    <!-- MAIN INTERFACE CONTAINER -->
     <main class="p-4 max-w-xl mx-auto pb-24">
 
-        <!-- MODULE 1: OVERTIME & SPAWNING LOGGING -->
         <div id="ot-tab" class="tab-content active space-y-4">
             <div class="bg-white dark:bg-[#1c2541] p-4 rounded-xl border-2 border-slate-200 dark:border-[#3a506b] shadow-sm">
                 <h2 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-3">Work Log Submission</h2>
@@ -87,7 +83,6 @@
                         </div>
                     </div>
 
-                    <!-- Dynamic Time Window Toggles -->
                     <div id="wrapper_same_day" class="p-3 rounded-lg bg-slate-100 dark:bg-[#0b1329] border border-slate-200 dark:border-slate-700 grid grid-cols-2 gap-3">
                         <div>
                             <label class="block text-xs font-bold mb-1 text-slate-600 dark:text-slate-300">Work Date</label>
@@ -110,7 +105,6 @@
                         </div>
                     </div>
 
-                    <!-- REWARD SYSTEM MATRIX SELECTION -->
                     <div class="p-4 rounded-xl border-2 border-dashed border-blue-400 dark:border-[#3a506b] bg-blue-50/50 dark:bg-[#1c2541]/50">
                         <label class="block text-[10px] font-black uppercase tracking-widest text-blue-600 dark:text-[#5bc0be] mb-2">Compensation Method</label>
                         <div class="grid grid-cols-2 gap-3">
@@ -138,7 +132,6 @@
             </div>
         </div>
 
-        <!-- MODULE 2: LEAVE APPLICATION -->
         <div id="leave-tab" class="tab-content space-y-4">
             <div class="bg-white dark:bg-[#1c2541] p-4 rounded-xl border-2 border-slate-200 dark:border-[#3a506b] shadow-sm">
                 <h2 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-3">Leave Application Entry</h2>
@@ -193,7 +186,6 @@
             </div>
         </div>
 
-        <!-- MODULE 3: LIVE RE-BALANCING METRIC DISPLAY LOOKUP -->
         <div id="balance-tab" class="tab-content space-y-4">
             <div class="bg-white dark:bg-[#1c2541] p-4 rounded-xl border-2 border-slate-200 dark:border-[#3a506b] shadow-sm">
                 <h2 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-1">Worker Ledger Lookup</h2>
@@ -237,7 +229,6 @@
             </div>
         </div>
 
-        <!-- MODULE 4: MANAGER EXECUTIVE CONTROL TERMINAL -->
         <div id="mgr-tab" class="tab-content space-y-4">
             <div id="gatekeeper_panel" class="text-center p-8 bg-white dark:bg-[#1c2541] border-2 border-slate-200 dark:border-[#3a506b] rounded-xl max-w-sm mx-auto space-y-4 shadow-sm">
                 <i data-lucide="lock" class="w-8 h-8 text-amber-500 mx-auto animate-pulse"></i>
@@ -260,7 +251,6 @@
                     </button>
                 </div>
 
-                <!-- BALANCES MONITOR SHEET OVERVIEW TAB TABLE -->
                 <div class="space-y-2">
                     <h3 class="text-xs font-black uppercase tracking-wider text-blue-500">Active Leave Registry Balances</h3>
                     <div class="overflow-x-auto rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#1c2541] shadow-sm">
@@ -280,7 +270,6 @@
                     </div>
                 </div>
 
-                <!-- DYNAMIC MONTHLY CALCULATOR WINDOW -->
                 <div class="space-y-4">
                     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 bg-white dark:bg-[#1c2541] p-4 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm">
                         <div>
@@ -299,7 +288,6 @@
                         </div>
                     </div>
 
-                    <!-- METRICS DISPLAY HERO CARD -->
                     <div class="grid grid-cols-2 gap-3">
                         <div class="bg-gradient-to-br from-blue-600 to-indigo-700 text-white p-4 rounded-xl shadow-sm">
                             <p class="text-[9px] font-black uppercase tracking-widest opacity-70">Total Calculated OT</p>
@@ -311,7 +299,6 @@
                         </div>
                     </div>
 
-                    <!-- FILTERED TIMELINE OUTPUT MATRIX -->
                     <div class="space-y-2">
                         <h3 class="text-xs font-black uppercase tracking-wider text-slate-400">Overtime Log Window Entries</h3>
                         <div class="overflow-x-auto rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#1c2541] shadow-sm">
@@ -333,7 +320,6 @@
                     </div>
                 </div>
 
-                <!-- LEAVE TRANSACTION VIEW -->
                 <div class="space-y-2">
                     <h3 class="text-xs font-black uppercase tracking-wider text-slate-400">Absence & Leave Application Log</h3>
                     <div class="overflow-x-auto rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#1c2541] shadow-sm">
@@ -356,8 +342,8 @@
         </div>
     </main>
 
-    <!-- SCRIPT SYSTEM CONTROLS -->
     <script>
+        // Single, verified configuration setup
         const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzwfA76ByGNnK0XtFpeqYCzZ54W1Lulz5tfqpahuzTLihJuryywejlC1SiKEg87Pl2PZw/exec"; 
         const CACHE_KEY = "hatchery_hr_v4_cache";
         const MASTER_PIN = "3653";
@@ -522,18 +508,13 @@
                     </tr>
                 `).join('') : `<tr><td colspan="4" class="p-4 text-center">No absences logged.</td></tr>`;
 
-                // Execute Calculator filter refresh
                 calculateMonthlyMetrics();
                 triggerBalanceLookup();
             } catch (err) { console.error("Data error registry pull:", err); }
         }
 
-        // 1. UPDATE THIS VARIABLE WITH YOUR ABSOLUTE NEW DEPLOYMENT LINK STRING
-        const WEB_APP_URL = "PASTE_YOUR_NEW_WEB_APP_URL_HERE"; 
-
-        // 2. REPLACE YOUR OLD METRICS FUNCTION WITH THIS PARSING VERSION
         function calculateMonthlyMetrics() {
-            const selectedMonth = document.getElementById('hr-calculator-month').value; // e.g., "2026-06"
+            const selectedMonth = document.getElementById('hr-calculator-month').value;
             const tableBody = document.getElementById('calc-ot-table-rows');
             
             let totalHours = 0;
@@ -543,13 +524,12 @@
             globalRawOtLogs.forEach(entry => {
                 if (!entry.date) return;
                 
-                // Unbreakable textual formatting converter
                 const entryDate = new Date(entry.date);
                 if (isNaN(entryDate.getTime())) return; 
                 
                 const year = entryDate.getFullYear();
                 const month = String(entryDate.getMonth() + 1).padStart(2, '0');
-                const entryMonthStr = `${year}-${month}`; // Outputs "YYYY-MM" matrix
+                const entryMonthStr = `${year}-${month}`;
 
                 if (entryMonthStr === selectedMonth) {
                     const displayDate = entryDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute:'2-digit' });
