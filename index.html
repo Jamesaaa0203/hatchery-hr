@@ -15,13 +15,24 @@
 </head>
 <body class="bg-slate-50 text-slate-900 font-sans min-h-screen dark:bg-[#0b1329] dark:text-white">
 
-    <!-- FIX 1: Tunnel-mode back button — hidden by default, shown via JS when ?targetTab=mgr-tab -->
+    <!-- Tunnel-mode back button -->
     <div id="tunnel-back-bar" class="hidden bg-white dark:bg-[#0b1329] border-b border-slate-200 dark:border-[#1c2541] px-4 py-2">
         <a href="https://aquaculture-master-hub.vercel.app"
            class="inline-flex items-center gap-1.5 text-xs font-black text-blue-600 dark:text-[#5bc0be] uppercase tracking-wider hover:underline">
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.75-7.5"/></svg>
             Back to Master Hub
         </a>
+    </div>
+
+    <!-- Webhook setup banner — shown when no URL is saved -->
+    <div id="hook-banner" class="hidden bg-amber-50 dark:bg-amber-950/20 border-b-2 border-dashed border-amber-400 px-4 py-3">
+        <p class="text-xs font-black uppercase tracking-wide mb-1">⚙ Configure Apps Script URL</p>
+        <p class="text-[10px] text-slate-500 dark:text-slate-400 mb-2">Paste the Google Apps Script web app URL to connect this app to your spreadsheet.</p>
+        <div class="flex gap-2">
+            <input id="hook-url-input" type="url" placeholder="https://script.google.com/macros/s/…/exec"
+                   class="flex-1 p-2 text-xs rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 dark:text-white font-mono outline-none focus:border-blue-500" autocomplete="off">
+            <button onclick="saveHookUrl()" class="px-3 py-2 bg-blue-600 text-white text-xs font-black rounded-lg uppercase tracking-wider whitespace-nowrap">Save URL</button>
+        </div>
     </div>
 
     <header class="sticky top-0 z-40 border-b bg-white border-slate-200 dark:bg-[#0b1329] dark:border-[#1c2541] px-4 py-3 flex justify-between items-center shadow-sm">
@@ -325,11 +336,26 @@
     </main>
 
     <script>
-        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzwfA76ByGNnK0XtFpeqYCzZ54W1Lulz5tfqpahuzTLihJuryywejlC1SiKEg87Pl2PZw/exec";
+        // URL stored in localStorage — never hardcoded again
+        const HOOK_KEY    = "hr_gas_url";
         const CACHE_KEY   = "hatchery_hr_v4_cache";
         const MASTER_PIN  = "3653";
         let liveBalancesData = [];
         let globalRawOtLogs  = [];
+
+        function getUrl() { return localStorage.getItem(HOOK_KEY) || ''; }
+
+        function saveHookUrl() {
+            const v = document.getElementById('hook-url-input').value.trim();
+            if (!v.includes('script.google.com')) {
+                alert('Invalid URL — must be a Google Apps Script /exec URL');
+                return;
+            }
+            localStorage.setItem(HOOK_KEY, v);
+            document.getElementById('hook-banner').classList.add('hidden');
+            alert('URL saved! Syncing data now…');
+            fetchSheetData();
+        }
 
         // ── Theme ─────────────────────────────────────────────
         function calculateThemeScope() {
@@ -469,7 +495,9 @@
                 if (!p.employeeName || !p.startDate || !p.durationDays) { alert("Please fill all leave fields."); return; }
             }
             try {
-                await fetch(WEB_APP_URL, { method:"POST", mode:"no-cors", headers:{"Content-Type":"application/json"}, body:JSON.stringify(p) });
+                const gasUrl = getUrl();
+            if (!gasUrl) { alert('Please configure the Apps Script URL first (see banner at top).'); return; }
+            await fetch(gasUrl, { method:"POST", mode:"no-cors", headers:{"Content-Type":"application/json"}, body:JSON.stringify(p) });
                 alert("Submitted successfully!");
                 document.getElementById(type === "OT" ? "otForm" : "leaveForm").reset();
                 saveFormCache(); toggleOTFields(); fetchSheetData();
@@ -479,7 +507,9 @@
         // ── Fetch sheet data ──────────────────────────────────
         async function fetchSheetData() {
             try {
-                const resp = await fetch(WEB_APP_URL);
+                const gasUrl = getUrl();
+                if (!gasUrl) { console.warn('No GAS URL configured.'); return; }
+                const resp = await fetch(gasUrl, { cache:'no-store' });
                 const data = await resp.json();
                 liveBalancesData = data.balances || [];
                 globalRawOtLogs  = data.ot       || [];
@@ -582,6 +612,11 @@
             }
 
             if (targetTab) switchTab(targetTab);
+
+            // Show webhook setup banner if URL not yet saved
+            if (!getUrl()) {
+                document.getElementById('hook-banner').classList.remove('hidden');
+            }
 
             fetchSheetData();
 
