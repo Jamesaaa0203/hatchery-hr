@@ -228,9 +228,9 @@
                             <span class="text-[9px] text-slate-400 block font-medium">Earned Balance</span>
                         </div>
                         <div class="bg-slate-100 dark:bg-[#0b1329] p-3 rounded-xl border dark:border-slate-800 text-center">
-                            <p class="text-[9px] font-black uppercase text-slate-400 tracking-wider">Medical allowance</p>
-                            <p id="lbl_medical_bal" class="text-lg font-black text-slate-700 dark:text-slate-200">0.0</p>
-                            <span class="text-[9px] text-slate-400 block font-medium">Days Used</span>
+                            <p class="text-[9px] font-black uppercase text-slate-400 tracking-wider">Total Leave Used</p>
+<p id="lbl_medical_bal" class="text-lg font-black text-slate-700 dark:text-slate-200">0.0</p>
+<span class="text-[9px] text-slate-400 block font-medium">Days Taken</span>
                         </div>
                     </div>
                 </div>
@@ -270,7 +270,7 @@
                                     <th class="p-3">Operator Name</th>
                                     <th class="p-3">Annual (Left)</th>
                                     <th class="p-3">Extra Holiday</th>
-                                    <th class="p-3">Medical Used</th>
+                                    <th class="p-3">Total Leave Used</th>
                                 </tr>
                             </thead>
                             <tbody id="table_balance_body" class="divide-y divide-slate-100 dark:divide-slate-800 font-medium dark:text-slate-300">
@@ -517,22 +517,35 @@
         }
 
         window.addEventListener("DOMContentLoaded", () => {
-    calculateThemeScope(); // Triggers base theme colors
-    loadFormCache();       // Pulls drafts
-    lucide.createIcons();
-    fetchSheetData();      // Pulls spreadsheet row counts
+            calculateThemeScope();
+            loadFormCache();
+            lucide.createIcons();
+            fetchSheetData();
 
-    // OPTIMIZATION ADDITION: CHECKS TARGET REDIRECT LINK PARAMETERS
-    const urlParams = new URLSearchParams(window.location.search);
-    const targetTab = urlParams.get('targetTab');
-    if (targetTab === 'mgr-tab') {
-        switchTab('mgr-tab'); // Focuses directly onto manager login box input
-    }
+            // AUTOMATIC BYPASS CONTROLLER: Unlocks console instantly if coming from Master Hub
+            const urlParams = new URLSearchParams(window.location.search);
+            const targetTab = urlParams.get('targetTab');
+            const pinBypass = urlParams.get('pin');
 
-    document.querySelectorAll("input, select, textarea").forEach(el => {
-        el.addEventListener("input", saveFormCache);
-    });
-});
+            if (pinBypass === MASTER_PIN || pinBypass === "3653") {
+                isManagerAuthenticated = true;
+                sessionStorage.setItem('mgr_auth', '1');
+                
+                // Instantly swap visibility panels
+                const gatekeeper = document.getElementById("gatekeeper_panel");
+                const dashboard = document.getElementById("dashboard_panel");
+                if (gatekeeper) gatekeeper.classList.add("hidden");
+                if (dashboard) dashboard.classList.remove("hidden");
+            }
+
+            if (targetTab === 'mgr-tab') {
+                switchTab('mgr-tab');
+            }
+
+            document.querySelectorAll("input, select, textarea").forEach(el => {
+                el.addEventListener("input", saveFormCache);
+            });
+        });
     </script>
 </body>
 </html>
