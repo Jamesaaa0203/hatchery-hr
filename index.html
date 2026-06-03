@@ -325,7 +325,7 @@
 
     <!-- SCRIPT SYSTEM CONTROLS -->
     <script>
-        const WEB_APP_URL = "https://jamesaaa0203.github.io/hatchery-hr/"; 
+        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzGunqr_-X6YExc7P-M8HBWLBQD9oJe2jLqu4thp1-Hw4wv2X6ZGU9NZTWzt3BA8AILTQ/exec"; 
         const CACHE_KEY = "hatchery_hr_v4_cache";
         const MASTER_PIN = "3653";
         let liveBalancesData = [];
@@ -517,14 +517,22 @@
         }
 
         window.addEventListener("DOMContentLoaded", () => {
-            calculateThemeScope();
-            loadFormCache();
-            lucide.createIcons();
-            fetchSheetData();
-            document.querySelectorAll("input, select, textarea").forEach(el => {
-                el.addEventListener("input", saveFormCache);
-            });
-        });
+    calculateThemeScope(); // Triggers base theme colors
+    loadFormCache();       // Pulls drafts
+    lucide.createIcons();
+    fetchSheetData();      // Pulls spreadsheet row counts
+
+    // OPTIMIZATION ADDITION: CHECKS TARGET REDIRECT LINK PARAMETERS
+    const urlParams = new URLSearchParams(window.location.search);
+    const targetTab = urlParams.get('targetTab');
+    if (targetTab === 'mgr-tab') {
+        switchTab('mgr-tab'); // Focuses directly onto manager login box input
+    }
+
+    document.querySelectorAll("input, select, textarea").forEach(el => {
+        el.addEventListener("input", saveFormCache);
+    });
+});
     </script>
 </body>
 </html>
