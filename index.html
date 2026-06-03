@@ -358,7 +358,7 @@
 
     <!-- SCRIPT SYSTEM CONTROLS -->
     <script>
-        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwkRrW1YHdlBOSa-Xg5hi2yjwemYZcY-6uFpdZaesD_vTLzCiDp8HQ9UUnpXMrTn5JASg/exec"; 
+        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzwfA76ByGNnK0XtFpeqYCzZ54W1Lulz5tfqpahuzTLihJuryywejlC1SiKEg87Pl2PZw/exec"; 
         const CACHE_KEY = "hatchery_hr_v4_cache";
         const MASTER_PIN = "3653";
         let liveBalancesData = [];
@@ -528,8 +528,12 @@
             } catch (err) { console.error("Data error registry pull:", err); }
         }
 
+        // 1. UPDATE THIS VARIABLE WITH YOUR ABSOLUTE NEW DEPLOYMENT LINK STRING
+        const WEB_APP_URL = "PASTE_YOUR_NEW_WEB_APP_URL_HERE"; 
+
+        // 2. REPLACE YOUR OLD METRICS FUNCTION WITH THIS PARSING VERSION
         function calculateMonthlyMetrics() {
-            const selectedMonth = document.getElementById('hr-calculator-month').value;
+            const selectedMonth = document.getElementById('hr-calculator-month').value; // e.g., "2026-06"
             const tableBody = document.getElementById('calc-ot-table-rows');
             
             let totalHours = 0;
@@ -539,12 +543,13 @@
             globalRawOtLogs.forEach(entry => {
                 if (!entry.date) return;
                 
+                // Unbreakable textual formatting converter
                 const entryDate = new Date(entry.date);
-                if (isNaN(entryDate.getTime())) return;
+                if (isNaN(entryDate.getTime())) return; 
                 
                 const year = entryDate.getFullYear();
                 const month = String(entryDate.getMonth() + 1).padStart(2, '0');
-                const entryMonthStr = `${year}-${month}`;
+                const entryMonthStr = `${year}-${month}`; // Outputs "YYYY-MM" matrix
 
                 if (entryMonthStr === selectedMonth) {
                     const displayDate = entryDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute:'2-digit' });
