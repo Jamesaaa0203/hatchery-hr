@@ -314,10 +314,17 @@
                 <!-- Leave log -->
                 <div class="space-y-2">
                     <h3 class="text-xs font-black uppercase tracking-wider text-slate-400">Leave Application Log</h3>
+
+                    <!-- Monthly per-operator summary chips -->
+                    <div id="leave-monthly-summary" class="space-y-1.5">
+                        <p class="text-xs text-slate-400 italic text-center py-1">Sync data to view summary.</p>
+                    </div>
+
                     <div class="overflow-x-auto rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#1c2541] shadow-sm">
                         <table class="w-full text-left border-collapse text-xs">
                             <thead>
                                 <tr class="bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 font-black uppercase text-[10px] border-b dark:border-slate-700">
+                                    <th class="p-3">Date</th>
                                     <th class="p-3">Operator</th>
                                     <th class="p-3">Leave Type</th>
                                     <th class="p-3">Duration</th>
@@ -325,7 +332,7 @@
                                 </tr>
                             </thead>
                             <tbody id="table_leave_body" class="divide-y divide-slate-100 dark:divide-slate-800 font-medium dark:text-slate-300">
-                                <tr><td colspan="4" class="p-4 text-center text-slate-400 italic">Awaiting sync...</td></tr>
+                                <tr><td colspan="5" class="p-4 text-center text-slate-400 italic">Awaiting sync...</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -568,15 +575,68 @@
                 return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}` === month;
             });
 
+            // Sort by date ascending
+            filteredLeave.sort((a, b) => new Date(a.startDate||'') - new Date(b.startDate||''));
+
+            // ── Per-operator monthly summary ──────────────────────
+            const summary = {};
+            filteredLeave.forEach(r => {
+                if (!r.name) return;
+                if (!summary[r.name]) summary[r.name] = { annual:0, extra:0, unpaid:0, medical:0, emergency:0, total:0 };
+                const d = parseFloat(r.days) || 0;
+                summary[r.name].total += d;
+                const t = (r.type||'').toLowerCase();
+                if      (t.includes('annual'))    summary[r.name].annual    += d;
+                else if (t.includes('extra'))     summary[r.name].extra     += d;
+                else if (t.includes('medical'))   summary[r.name].medical   += d;
+                else if (t.includes('emergency')) summary[r.name].emergency += d;
+                else                              summary[r.name].unpaid    += d;
+            });
+
+            const summaryEl = document.getElementById('leave-monthly-summary');
+            const names = Object.keys(summary);
+            if (names.length) {
+                summaryEl.innerHTML = names.map(name => {
+                    const s = summary[name];
+                    const chips = [
+                        s.annual    > 0 ? `<span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-blue-100 text-blue-700 dark:bg-blue-950 dark:text-blue-300">${s.annual}d Annual</span>` : '',
+                        s.unpaid    > 0 ? `<span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-300">${s.unpaid}d Unpaid</span>` : '',
+                        s.medical   > 0 ? `<span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-rose-100 text-rose-700 dark:bg-rose-950 dark:text-rose-300">${s.medical}d Medical</span>` : '',
+                        s.emergency > 0 ? `<span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-orange-100 text-orange-700 dark:bg-orange-950 dark:text-orange-300">${s.emergency}d Emergency</span>` : '',
+                        s.extra     > 0 ? `<span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300">${s.extra}d Extra Hol.</span>` : '',
+                    ].filter(Boolean).join('');
+                    return `
+                        <div class="flex items-center justify-between px-3 py-2 rounded-lg bg-slate-50 dark:bg-[#0b1329] border border-slate-200 dark:border-slate-700">
+                            <span class="font-black text-xs w-20 flex-shrink-0">${name}</span>
+                            <div class="flex gap-1 flex-wrap justify-end">${chips}</div>
+                            <span class="ml-2 flex-shrink-0 text-xs font-black text-slate-700 dark:text-slate-300">${s.total}d</span>
+                        </div>`;
+                }).join('');
+            } else {
+                summaryEl.innerHTML = '<p class="text-xs text-slate-400 italic text-center py-1">No leave this month.</p>';
+            }
+
+            // ── Detail table ──────────────────────────────────────
             document.getElementById("table_leave_body").innerHTML = filteredLeave.length
-                ? filteredLeave.map(r => `
-                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50">
-                        <td class="p-3 font-semibold">${r.name||''}</td>
-                        <td class="p-3"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300">${r.type||''}</span></td>
-                        <td class="p-3 font-black">${r.days||''} Day(s)</td>
-                        <td class="p-3 text-slate-400 text-[11px]" title="${r.reason||''}">${(r.reason||'').substring(0,40)}${(r.reason||'').length>40?'…':''}</td>
-                    </tr>`).join('')
-                : `<tr><td colspan="4" class="p-6 text-center font-bold text-slate-400 uppercase tracking-wide bg-slate-50/50 dark:bg-slate-800/10">No leave records for this month.</td></tr>`;
+                ? filteredLeave.map(r => {
+                    const rd = new Date(r.startDate || '');
+                    const dateStr = isNaN(rd.getTime()) ? '—'
+                        : rd.toLocaleDateString('en-MY', { day:'numeric', month:'short', year:'numeric' });
+                    const typeColor = (r.type||'').toLowerCase().includes('annual')   ? 'bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-300'
+                                    : (r.type||'').toLowerCase().includes('unpaid')   ? 'bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300'
+                                    : (r.type||'').toLowerCase().includes('medical')  ? 'bg-rose-100 text-rose-800 dark:bg-rose-950 dark:text-rose-300'
+                                    : (r.type||'').toLowerCase().includes('emergency')? 'bg-orange-100 text-orange-800 dark:bg-orange-950 dark:text-orange-300'
+                                    : 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300';
+                    return `
+                        <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50">
+                            <td class="p-3 font-mono text-[11px] text-slate-500 whitespace-nowrap">${dateStr}</td>
+                            <td class="p-3 font-bold text-xs">${r.name||''}</td>
+                            <td class="p-3"><span class="px-2 py-0.5 rounded text-[10px] font-bold ${typeColor}">${r.type||''}</span></td>
+                            <td class="p-3 font-black text-xs whitespace-nowrap">${r.days||''} day(s)</td>
+                            <td class="p-3 text-slate-400 text-[11px]" title="${r.reason||''}">${(r.reason||'').substring(0,45)}${(r.reason||'').length>45?'…':''}</td>
+                        </tr>`;
+                }).join('')
+                : `<tr><td colspan="5" class="p-6 text-center font-bold text-slate-400 uppercase tracking-wide bg-slate-50/50 dark:bg-slate-800/10">No leave records for this month.</td></tr>`;
         }
 
         // ── Balance lookup ────────────────────────────────────
