@@ -279,17 +279,7 @@
                         </select>
                     </div>
 
-                    <div class="grid grid-cols-2 gap-3">
-                        <div class="bg-gradient-to-br from-blue-600 to-indigo-700 text-white p-4 rounded-xl shadow-sm">
-                            <p class="text-[9px] font-black uppercase tracking-widest opacity-70">Payroll OT Hours</p>
-                            <p class="text-[8px] opacity-60 mb-0.5">Standard Pay only</p>
-                            <h3 id="calc-total-ot-hours" class="text-2xl font-black mt-0.5">0.0 Hours</h3>
-                        </div>
-                        <div class="bg-white dark:bg-[#1c2541] border border-slate-200 dark:border-slate-700 p-4 rounded-xl shadow-sm">
-                            <p class="text-[9px] font-black uppercase tracking-widest text-slate-400">Shift Count</p>
-                            <h3 id="calc-total-ot-shifts" class="text-2xl font-black text-slate-800 dark:text-white mt-0.5">0 Shifts</h3>
-                        </div>
-                    </div>
+
 
                     <div class="space-y-2">
                         <h3 class="text-xs font-black uppercase tracking-wider text-slate-400">Overtime Log Entries</h3>
@@ -569,8 +559,6 @@
                     </tr>`;
             });
 
-            document.getElementById('calc-total-ot-hours').textContent = `${totalHours.toFixed(1)} Hours`;
-            document.getElementById('calc-total-ot-shifts').textContent = `${shiftCount} ${shiftCount===1?'Shift':'Shifts'}`;
             document.getElementById('calc-ot-table-rows').innerHTML = shiftCount
                 ? html
                 : `<tr><td colspan="5" class="p-6 text-center font-bold text-slate-400 uppercase tracking-wide bg-slate-50/50 dark:bg-slate-800/10">No records for this month.</td></tr>`;
@@ -611,8 +599,6 @@
                 }
             });
 
-            // Update top summary cards with pay-only total
-            document.getElementById('calc-total-ot-hours').textContent = `${payHoursTotal.toFixed(1)} Hours`;
 
             const otSummaryEl = document.getElementById('ot-monthly-summary');
             const otNames = Object.keys(otSummary).sort();
