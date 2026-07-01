@@ -120,6 +120,17 @@
                             <input type="datetime-local" id="ot_end" class="w-full p-2 rounded bg-white dark:bg-slate-700 border dark:border-slate-600 text-xs font-semibold">
                         </div>
                     </div>
+                    <div>
+                        <label class="block text-[10px] font-black uppercase tracking-wider mb-1 text-slate-500">Reason (for payroll)</label>
+                        <select id="ot_reason_select" onchange="toggleOtherReason()" class="w-full p-3 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 dark:text-white font-semibold outline-none">
+                            <option value="Spawning activity">Spawning activity</option>
+                            <option value="Night guarding">Night guarding</option>
+                            <option value="Processing / packing">Processing / packing</option>
+                            <option value="Water quality check">Water quality check</option>
+                            <option value="Other">Other (specify below)</option>
+                        </select>
+                        <input type="text" id="ot_reason_other" placeholder="Type the reason..." class="hidden mt-2 w-full p-3 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 dark:text-white font-medium outline-none">
+                    </div>
                     <div class="p-4 rounded-xl border-2 border-dashed border-blue-400 dark:border-[#3a506b] bg-blue-50/50 dark:bg-[#1c2541]/50">
                         <label class="block text-[10px] font-black uppercase tracking-widest text-blue-600 dark:text-[#5bc0be] mb-2">Compensation Method</label>
                         <div class="grid grid-cols-2 gap-3">
@@ -301,6 +312,7 @@
                                         <th class="p-3">Hours</th>
                                         <th class="p-3">Type</th>
                                         <th class="p-3">Payout</th>
+                                        <th class="p-3">Reason</th>
                                     </tr>
                                 </thead>
                                 <tbody id="calc-ot-table-rows" class="divide-y divide-slate-100 dark:divide-slate-800 font-medium dark:text-slate-300">
@@ -419,6 +431,10 @@
             document.getElementById("wrapper_same_day").classList.toggle("hidden", t !== "Same Day");
             document.getElementById("wrapper_overnight").classList.toggle("hidden", t === "Same Day");
         }
+        function toggleOtherReason() {
+            const isOther = document.getElementById("ot_reason_select").value === "Other";
+            document.getElementById("ot_reason_other").classList.toggle("hidden", !isOther);
+        }
 
         // ── Manager unlock ────────────────────────────────────
         function unlockDashboard() {
@@ -447,6 +463,8 @@
                 otStart:      document.getElementById("ot_start").value,
                 otEnd:        document.getElementById("ot_end").value,
                 otComp:       document.querySelector('input[name="ot_comp_rule"]:checked')?.value || "Standard Pay",
+                otReasonSel:  document.getElementById("ot_reason_select")?.value || "",
+                otReasonOther:document.getElementById("ot_reason_other")?.value || "",
                 lName:        document.getElementById("leave_name").value,
                 lType:        document.getElementById("leave_type").value,
                 lStart:       document.getElementById("leave_start").value,
@@ -478,7 +496,10 @@
                 const rb = document.querySelector(`input[name="ot_comp_rule"][value="${c.otComp}"]`);
                 if (rb) rb.checked = true;
             }
+            if (c.otReasonSel) document.getElementById("ot_reason_select").value = c.otReasonSel;
+            if (c.otReasonOther) document.getElementById("ot_reason_other").value = c.otReasonOther;
             toggleOTFields();
+            toggleOtherReason();
         }
 
         // ── Submit ────────────────────────────────────────────
@@ -493,6 +514,8 @@
                 p.startTime        = document.getElementById("ot_start").value;
                 p.endTime          = document.getElementById("ot_end").value;
                 p.compensationRule = document.querySelector('input[name="ot_comp_rule"]:checked').value;
+                const reasonSel = document.getElementById("ot_reason_select").value;
+                p.reason = reasonSel === "Other" ? (document.getElementById("ot_reason_other").value.trim() || "Other") : reasonSel;
                 if (!p.employeeName) { alert("Please select an operator name."); return; }
             } else {
                 p.employeeName = document.getElementById("leave_name").value;
@@ -559,6 +582,7 @@
                         <td class="p-3 font-black text-indigo-600 dark:text-indigo-400">${h.toFixed(1)} h</td>
                         <td class="p-3"><span class="px-2 py-0.5 rounded text-[10px] font-black bg-slate-100 dark:bg-slate-800 uppercase text-slate-400">${entry.dayType}</span></td>
                         <td class="p-3"><span class="px-2 py-0.5 rounded text-[10px] font-bold ${entry.compRule==='Extra Holiday'?'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300':'bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-300'}">${entry.compRule||'Standard Pay'}</span></td>
+                        <td class="p-3 text-slate-400 text-[11px]">${entry.reason||'—'}</td>
                     </tr>`;
             });
 
