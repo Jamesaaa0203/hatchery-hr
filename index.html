@@ -316,7 +316,7 @@
                                     </tr>
                                 </thead>
                                 <tbody id="calc-ot-table-rows" class="divide-y divide-slate-100 dark:divide-slate-800 font-medium dark:text-slate-300">
-                                    <tr><td colspan="5" class="p-4 text-center text-slate-400 italic">No logs parsed.</td></tr>
+                                    <tr><td colspan="6" class="p-4 text-center text-slate-400 italic">No logs parsed.</td></tr>
                                 </tbody>
                             </table>
                         </div>
@@ -588,7 +588,7 @@
 
             document.getElementById('calc-ot-table-rows').innerHTML = shiftCount
                 ? html
-                : `<tr><td colspan="5" class="p-6 text-center font-bold text-slate-400 uppercase tracking-wide bg-slate-50/50 dark:bg-slate-800/10">No records for this month.</td></tr>`;
+                : `<tr><td colspan="6" class="p-6 text-center font-bold text-slate-400 uppercase tracking-wide bg-slate-50/50 dark:bg-slate-800/10">No records for this month.</td></tr>`;
 
             // ── Per-operator OT monthly summary ───────────────────
             const otSummary = {};
